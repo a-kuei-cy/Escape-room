@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>暑期閱讀素養大闖關 - 密室逃脫生存賽</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;900&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      background: radial-gradient(circle, #1a1525 0%, #0c0813 100%);
+    }
+    .fantasy-title {
+      font-family: 'Cinzel', 'Noto Sans TC', serif;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 10, 25, 0.6);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #8b5cf6;
+      border-radius: 3px;
+    }
+    @keyframes pulse-slow {
+      0%, 100% { opacity: 0.8; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.03); }
+    }
+    .pulse-glow {
+      animation: pulse-slow 3s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="text-gray-100 min-h-screen flex flex-col justify-between">
+
+  <!-- 背景裝飾 -->
+  <div class="fixed inset-0 pointer-events-none opacity-20 bg-[radial-gradient(#8b5cf6_1px,transparent_1px)] [background-size:16px_16px]"></div>
+
+  <!-- 頂部導覽列 -->
+  <header class="border-b border-purple-900/50 bg-black/40 backdrop-blur-md px-6 py-4 z-10">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+      <div class="flex items-center gap-3 cursor-pointer" onclick="showScreen('home')">
+        <div class="bg-purple-600/20 p-2 rounded-lg border border-purple-500/50">
+          <i data-lucide="key-round" class="text-purple-400 w-6 h-6"></i>
+        </div>
+        <div>
+          <h1 class="fantasy-title text-xl font-bold tracking-wider text-purple-300">LIBRARY ESCAPE</h1>
+          <p class="text-xs text-gray-400">暑期閱讀素養大闖關</p>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="showScreen('leaderboard')" class="flex items-center gap-1 bg-amber-600/20 border border-amber-500/30 hover:bg-amber-600/30 text-amber-300 px-3 py-1.5 rounded-lg text-sm transition-all">
+          <i data-lucide="trophy" class="w-4 h-4"></i> 英雄榜 (前20)
+        </button>
+        <button onclick="openAdminModal()" class="flex items-center gap-1 bg-gray-800 border border-gray-700 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded-lg text-sm transition-all">
+          <i data-lucide="settings" class="w-4 h-4"></i> 後台管理
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主內容區 -->
+  <main class="flex-grow flex items-center justify-center p-4 z-10">
+    <div class="w-full max-w-4xl">
+
+      <!-- ================= 畫面：首頁/登入大廳 ================= -->
+      <section id="screen-home" class="screen bg-black/60 border border-purple-900/50 rounded-2xl p-6 md:p-10 shadow-2xl backdrop-blur-md text-center max-w-2xl mx-auto">
+        <div class="mb-6 flex justify-center">
+          <div class="relative">
+            <div class="absolute inset-0 bg-purple-500/30 rounded-full blur-xl pulse-glow"></div>
+            <div class="relative bg-purple-950/80 border-2 border-purple-500 rounded-full p-6 text-purple-400">
+              <i data-lucide="shield-check" class="w-16 h-16"></i>
+            </div>
+          </div>
+        </div>
+
+        <h2 class="fantasy-title text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-pink-300 to-amber-200 mb-2">
+          智慧圖書館：生存試煉
+        </h2>
+        
+        <p class="text-gray-300 text-sm md:text-base leading-relaxed mb-6 max-w-md mx-auto">
+          這是一場拒絕死記硬背、考驗真實理解的智慧試煉。選項在每次作答時都會<span class="text-purple-400 font-bold">隨機打亂</span>。唯有細心閱讀、邏輯思辨，才能在生存賽中勇奪高分！
+        </p>
+
+        <!-- 連線狀態提示 -->
+        <div id="connection-status" class="mb-6 text-xs text-gray-400 flex items-center justify-center gap-1 bg-purple-950/30 py-1.5 px-3 rounded-full border border-purple-900/30 w-fit mx-auto">
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-yellow-500" id="status-dot"></span>
+          <span id="status-text">正在連接試算表雲端題庫...</span>
+        </div>
+
+        <!-- 登錄挑戰身分表單 -->
+        <div class="bg-purple-950/40 border border-purple-900/50 rounded-xl p-6 mb-6 text-left max-w-md mx-auto shadow-inner">
+          <h3 class="text-purple-300 font-bold mb-4 flex items-center gap-1.5 border-b border-purple-900/50 pb-2">
+            <i data-lucide="user-check" class="w-5 h-5 text-purple-400"></i> 請先登記您的挑戰身分：
+          </h3>
+          <form id="start-game-form" onsubmit="handleStartForm(event)" class="space-y-4">
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs text-gray-400 mb-1" for="input-grade">年級</label>
+                <select id="input-grade" required class="w-full bg-black border border-purple-900/50 focus:border-purple-500 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-purple-500">
+                  <option value="" disabled selected>選擇年級</option>
+                  <option value="一年級">一年級</option>
+                  <option value="二年級">二年級</option>
+                  <option value="三年級">三年級</option>
+                  <option value="四年級">四年級</option>
+                  <option value="五年級">五年級</option>
+                  <option value="六年級">六年級</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs text-gray-400 mb-1" for="input-class">班級</label>
+                <select id="input-class" required class="w-full bg-black border border-purple-900/50 focus:border-purple-500 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-purple-500">
+                  <option value="" disabled selected>選擇班級</option>
+                  <option value="1班">1班</option>
+                  <option value="2班">2班</option>
+                  <option value="3班">3班</option>
+                  <option value="4班">4班</option>
+                  <option value="5班">5班</option>
+                  <option value="6班">6班</option>
+                  <option value="7班">7班</option>
+                  <option value="8班">8班</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs text-gray-400 mb-1" for="input-name">學生姓名</label>
+              <input type="text" id="input-name" required placeholder="請輸入真實姓名" class="w-full bg-black border border-purple-900/50 focus:border-purple-500 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-purple-500">
+            </div>
+
+            <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold py-3.5 rounded-xl text-lg shadow-lg hover:shadow-purple-500/20 transition-all duration-300 flex items-center justify-center gap-2">
+              <i data-lucide="play" class="w-5 h-5"></i> 進入生存密室
+            </button>
+          </form>
+        </div>
+
+        <div class="text-xs text-gray-500 leading-relaxed max-w-md mx-auto">
+          🛡️ <strong>防作弊機制已啟用</strong>：本系統每題之 <span class="text-purple-300 font-bold">選項 A, B, C, D 順序皆為隨機打亂</span>，記誦字母無效。答錯一題立刻結束並自動存檔，僅在榜上保留個人最高分（前 20 名）。
+        </div>
+      </section>
+
+
+      <!-- ================= 畫面：遊戲進行中 ================= -->
+      <section id="screen-game" class="screen hidden grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- 左側：作答狀態與進度 -->
+        <div class="bg-black/60 border border-purple-900/50 rounded-2xl p-5 backdrop-blur-md flex flex-col justify-between h-fit md:h-full">
+          <div>
+            <!-- 目前玩家身分提示 -->
+            <div class="bg-purple-950/40 border border-purple-900/50 rounded-xl p-3 mb-4 text-center">
+              <div class="text-[10px] text-purple-400 tracking-wider font-bold">當前挑戰者</div>
+              <div class="text-sm font-bold text-white mt-1" id="current-player-info">六年級8班 王O明</div>
+            </div>
+
+            <div class="flex justify-between items-center mb-4">
+              <span class="text-xs text-gray-400 tracking-wider">生存熱度 (已挑戰)</span>
+              <span class="text-xs font-bold text-purple-400" id="progress-text">第 1 題</span>
+            </div>
+            
+            <!-- 發光進度條 -->
+            <div class="w-full bg-gray-800 h-2.5 rounded-full mb-6 overflow-hidden relative">
+              <div id="progress-bar" class="bg-gradient-to-r from-purple-500 to-pink-500 h-full w-full animate-pulse"></div>
+            </div>
+
+            <div class="space-y-4">
+              <div class="bg-purple-950/20 border border-purple-900/40 rounded-xl p-3.5 flex items-center gap-3">
+                <div class="p-2 bg-purple-600/10 rounded-lg text-purple-400">
+                  <i data-lucide="timer" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <div class="text-xs text-gray-400">生存累積時間</div>
+                  <div class="text-xl font-bold font-mono text-purple-200" id="game-timer">00:00</div>
+                </div>
+              </div>
+
+              <div class="bg-amber-950/20 border border-amber-900/40 rounded-xl p-3.5 flex items-center gap-3">
+                <div class="p-2 bg-amber-600/10 rounded-lg text-amber-400">
+                  <i data-lucide="zap" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <div class="text-xs text-gray-400">當前累積成績</div>
+                  <div class="text-xl font-bold text-amber-300" id="streak-text">0 題</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-8 border-t border-purple-900/30 pt-4 hidden md:block">
+            <p class="text-xs text-purple-400 leading-relaxed bg-purple-950/20 p-2.5 rounded-lg border border-purple-900/30">
+              <i data-lucide="sparkles" class="inline w-3.5 h-3.5 text-purple-300 mr-1"></i>
+              <strong>理解提示</strong>：注意！選項已被隨機混亂。不要依賴字母，請細讀選項中的科學或文學邏輯！
+            </p>
+          </div>
+        </div>
+
+        <!-- 右側：題目本文與選項 -->
+        <div class="md:col-span-2 bg-black/60 border border-purple-900/50 rounded-2xl p-6 backdrop-blur-md flex flex-col justify-between">
+          <div>
+            <!-- 文章引文區 -->
+            <div id="passage-container" class="bg-purple-950/20 border border-purple-900/30 rounded-xl p-4 mb-5 max-h-60 overflow-y-auto leading-relaxed text-sm md:text-base text-gray-200">
+              <!-- 動態載入文本 -->
+            </div>
+
+            <!-- 問題敘述 -->
+            <h3 class="text-base md:text-lg font-bold text-purple-200 mb-4 flex items-start gap-2">
+              <span class="bg-purple-600 text-white text-xs px-2 py-1 rounded mt-0.5" id="question-index-tag">Q1</span>
+              <span id="question-text">載入中...</span>
+            </h3>
+
+            <!-- 四個選項 (將由 JS 隨機打亂渲染) -->
+            <div class="grid grid-cols-1 gap-3 mb-6" id="options-container">
+              <!-- 按鈕會由 JS 動態生成 -->
+            </div>
+          </div>
+
+          <div class="text-right text-xs text-gray-500">
+            防背題系統已即時鎖定作答區...
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ================= 畫面：生存結束（結算與解析） ================= -->
+      <section id="screen-gameover" class="screen hidden bg-black/70 border border-purple-500/30 rounded-2xl p-6 md:p-10 shadow-2xl backdrop-blur-md text-center max-w-2xl mx-auto">
+        <div class="mb-6 flex justify-center">
+          <div class="bg-purple-950/80 border-2 border-purple-500 rounded-full p-5 text-purple-400 relative">
+            <div class="absolute inset-0 bg-purple-500/20 rounded-full blur-lg pulse-glow"></div>
+            <i data-lucide="trophy" class="w-16 h-16 relative z-10"></i>
+          </div>
+        </div>
+
+        <h2 class="fantasy-title text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-200 via-amber-200 to-purple-200 mb-2">挑戰結束</h2>
+        <p class="text-gray-400 text-sm mb-6">你已在智慧迷宮中燃盡了生存火花！成績已自動登錄。</p>
+
+        <!-- 即時數據板 -->
+        <div class="grid grid-cols-2 gap-4 mb-6">
+          <div class="bg-purple-950/30 border border-purple-900/50 rounded-xl p-4">
+            <div class="text-xs text-gray-400">最終獲得分數</div>
+            <div class="text-3xl font-black text-amber-300 mt-1" id="end-final-score">0 題</div>
+          </div>
+          <div class="bg-purple-950/30 border border-purple-900/50 rounded-xl p-4">
+            <div class="text-xs text-gray-400">本次堅持時間</div>
+            <div class="text-3xl font-black text-amber-300 mt-1" id="end-final-time">00:00</div>
+          </div>
+        </div>
+
+        <!-- 雲端寫入狀態提示條 -->
+        <div id="upload-status-box" class="mb-6 py-2 px-4 rounded-lg bg-gray-950/80 border border-gray-800 text-xs flex items-center justify-center gap-2">
+          <span id="upload-status-dot" class="w-2 h-2 rounded-full bg-yellow-500 animate-ping"></span>
+          <span id="upload-status-text" class="text-gray-400">正在傳送最佳成績至雲端試算表...</span>
+        </div>
+
+        <!-- 錯誤解析卡片 -->
+        <div id="failed-analysis-card" class="bg-gray-900/90 border border-red-900/30 rounded-xl p-5 mb-8 text-left hidden">
+          <h4 class="text-red-400 font-bold text-sm mb-2 flex items-center gap-1.5">
+            <i data-lucide="eye" class="w-4 h-4"></i> 生存止步：剛才那題的詳解
+          </h4>
+          <p class="text-xs text-gray-400 mb-2" id="failed-passage"></p>
+          <p class="text-sm text-gray-200 font-medium mb-3" id="failed-question"></p>
+          <div class="grid grid-cols-2 gap-2 text-xs mb-3">
+            <div class="p-2 rounded bg-red-950/30 text-red-300 border border-red-900/20" id="failed-user-ans">你的回答：</div>
+            <div class="p-2 rounded bg-green-950/30 text-green-300 border border-green-900/20" id="failed-correct-ans">正確答案：</div>
+          </div>
+          <div class="p-3 bg-purple-950/20 rounded border border-purple-900/20 text-xs text-purple-300 leading-relaxed">
+            <strong>解析說明：</strong> <span id="failed-explanation"></span>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+          <button onclick="startGame()" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold px-6 py-3 rounded-lg transition-all flex items-center justify-center gap-2 shadow-lg shadow-purple-500/20">
+            <i data-lucide="rotate-ccw" class="w-4 h-4"></i> 再次挑戰
+          </button>
+          <button onclick="showScreen('home')" class="bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold px-6 py-3 rounded-lg transition-all">
+            更換挑戰者身分
+          </button>
+        </div>
+      </section>
+
+
+      <!-- ================= 畫面：英雄榜 (Leaderboard) ================= -->
+      <section id="screen-leaderboard" class="screen hidden bg-black/60 border border-purple-900/50 rounded-2xl p-6 backdrop-blur-md">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <div class="text-left">
+            <h2 class="fantasy-title text-2xl font-bold text-amber-300 flex items-center gap-2">
+              <i data-lucide="trophy" class="text-amber-400"></i> 生存極限英雄碑 (前 20 名)
+            </h2>
+            <p class="text-xs text-gray-400 mt-1">💡 系統防洗板：每位同學僅保留「最高答對題數（同分則耗時愈短愈優先）」的最佳記錄。</p>
+          </div>
+          <button onclick="showScreen('home')" class="text-sm bg-purple-950/60 border border-purple-900/50 hover:bg-purple-900/50 text-purple-300 px-4 py-2 rounded-lg flex items-center gap-1">
+            <i data-lucide="home" class="w-4 h-4"></i> 返回大廳
+          </button>
+        </div>
+
+        <div class="overflow-x-auto max-h-[450px] overflow-y-auto border border-purple-900/30 rounded-xl">
+          <table class="w-full text-left text-sm text-gray-300">
+            <tbody id="leaderboard-body" class="divide-y divide-purple-950/30">
+              <!-- JS 動態插入 -->
+              <tr>
+                <td class="text-center py-8 text-gray-500">載入英雄榜中...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+
+      <!-- ================= 畫面：後台管理系統 ================= -->
+      <section id="screen-admin" class="screen hidden bg-black/80 border border-gray-700 rounded-2xl p-6 backdrop-blur-md">
+        <div class="flex justify-between items-center mb-6 border-b border-gray-800 pb-4">
+          <div>
+            <h2 class="text-xl font-bold text-white flex items-center gap-2">
+              <i data-lucide="sliders" class="text-purple-400"></i> 智慧圖書館：題庫管理後台
+            </h2>
+            <p class="text-xs text-gray-400">在這裡你可以自由新增、編修題目，或者進行資料匯出/匯入。</p>
+          </div>
+          <button onclick="showScreen('home')" class="text-sm bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded-lg border border-gray-700">
+            離開後台
+          </button>
+        </div>
+
+        <!-- 功能列 -->
+        <div class="flex flex-wrap gap-3 mb-6 bg-gray-900/50 p-4 rounded-xl border border-gray-800">
+          <button onclick="openEditQuestionModal(null)" class="bg-purple-600 hover:bg-purple-500 text-white text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-1.5">
+            <i data-lucide="plus" class="w-4 h-4"></i> 新增題目
+          </button>
+          <button onclick="exportQuestions()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-sm font-semibold px-4 py-2 rounded-lg border border-gray-700 flex items-center gap-1.5">
+            <i data-lucide="download" class="w-4 h-4"></i> 匯出 CSV
+          </button>
+          <label class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-sm font-semibold px-4 py-2 rounded-lg border border-gray-700 flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="upload" class="w-4 h-4"></i> 匯入 JSON
+            <input type="file" id="import-file" class="hidden" accept=".json" onchange="importQuestions(event)">
+          </label>
+          <button onclick="syncToCloud()" id="sync-cloud-btn" class="bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-1.5 ml-auto">
+            <i data-lucide="cloud-lightning" class="w-4 h-4"></i> 同步到雲端試算表
+          </button>
+        </div>
+
+        <!-- 題目清單表格 -->
+        <div class="overflow-x-auto max-h-[500px] overflow-y-auto border border-gray-800 rounded-xl">
+          <table class="w-full text-left text-sm text-gray-300">
+            <thead class="bg-gray-900 text-xs uppercase text-gray-400 sticky top-0">
+              <tr>
+                <th class="px-4 py-3 w-16">ID</th>
+                <th class="px-4 py-3">題目與文本</th>
+                <th class="px-4 py-3 w-20 text-center">正解</th>
+                <th class="px-4 py-3 w-32 text-center">操作</th>
+              </tr>
+            </thead>
+            <tbody id="admin-questions-body" class="divide-y divide-gray-800">
+              <!-- JS 動態插入 -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- 頁尾 -->
+  <footer class="border-t border-purple-900/30 bg-black/60 py-4 px-6 text-center text-xs text-gray-500 z-10">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+      <p>© 2026 學校暑期閱讀推廣活動. All rights reserved.</p>
+      <p class="flex items-center gap-1">
+        Powered by <span class="text-purple-400 font-semibold">Google Apps Script</span> & <span class="text-green-400 font-semibold">Google Sheets</span>
+      </p>
+    </div>
+  </footer>
+
+  <!-- ================= 互動彈窗 (Modals) ================= -->
+  
+  <!-- 1. 密碼驗證彈窗 -->
+  <div id="modal-password" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+    <div class="bg-gray-900 border border-purple-900/50 rounded-2xl p-6 w-full max-w-sm shadow-2xl">
+      <h3 class="text-lg font-bold text-white mb-2 flex items-center gap-1.5">
+        <i data-lucide="lock" class="text-purple-400"></i> 管理權限驗證
+      </h3>
+      <p class="text-xs text-gray-400 mb-4">請輸入管理者密碼以登入後台：</p>
+      <input type="password" id="admin-password-input" class="w-full bg-black border border-purple-900/50 rounded-lg p-2.5 text-sm text-white mb-4 focus:outline-none focus:ring-1 focus:ring-purple-500">
+      <div class="flex gap-2 justify-end">
+        <button onclick="closeAdminModal()" class="text-sm bg-gray-800 hover:bg-gray-700 text-gray-300 px-4 py-2 rounded-lg">取消</button>
+        <button onclick="verifyAdminPassword()" class="text-sm bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-lg font-semibold">登入</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 編輯題目彈窗 -->
+  <div id="modal-edit-question" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50 overflow-y-auto">
+    <div class="bg-gray-900 border border-gray-700 rounded-2xl p-6 w-full max-w-2xl my-8 shadow-2xl">
+      <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-1.5" id="edit-modal-title">
+        <i data-lucide="edit-3" class="text-purple-400"></i> 編輯題目
+      </h3>
+      <form id="edit-question-form" onsubmit="saveQuestion(event)" class="space-y-4">
+        <input type="hidden" id="edit-q-index">
+        <input type="hidden" id="edit-q-id">
+        
+        <div>
+          <label class="block text-xs text-gray-400 mb-1" for="edit-passage">文本/引導文 (選填)</label>
+          <textarea id="edit-passage" rows="3" class="w-full bg-black border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-purple-500"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs text-gray-400 mb-1" for="edit-question">問題敘述 *</label>
+          <input type="text" id="edit-question" required class="w-full bg-black border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-purple-500">
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs text-gray-400 mb-1" for="edit-optA">選項 A *</label>
+            <input type="text" id="edit-optA" required class="w-full bg-black border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-purple-500">
+          </div>
+          <div>
+            <label class="block text-xs text-gray-400 mb-1" for="edit-optB">選項 B *</label>
+            <input type="text" id="edit-optB" required class="w-full bg-black border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-purple-500">
+          </div>
+          <div>
+            <label class="block text-xs text-gray-400 mb-1" for="edit-optC">選項 C *</label>
+            <input type="text" id="edit-optC" required class="w-full bg-black border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-purple-500">
+          </div>
+          <div>
+            <label class="block text-xs text-gray-400 mb-1" for="edit-optD">選項 D *</label>
+            <input type="text" id="edit-optD" required class="w-full bg-black border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-purple-500">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs text-gray-400 mb-1" for="edit-answer">正確答案 *</label>
+            <select id="edit-answer" required class="w-full bg-black border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-purple-500">
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+              <option value="D">D</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs text-gray-400 mb-1" for="edit-explanation">答案解析 (選填)</label>
+          <textarea id="edit-explanation" rows="2" class="w-full bg-black border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-purple-500"></textarea>
+        </div>
+
+        <div class="flex gap-2 justify-end border-t border-gray-800 pt-4">
+          <button type="button" onclick="closeEditQuestionModal()" class="text-sm bg-gray-800 hover:bg-gray-700 text-gray-300 px-4 py-2 rounded-lg">取消</button>
+          <button type="submit" class="text-sm bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-lg font-semibold">保存修改</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. 自訂通知與對話方塊 -->
+  <div id="custom-alert" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden flex items-center justify-center p-4 z-[60]">
+    <div class="bg-gray-900 border border-purple-900/50 rounded-2xl p-6 w-full max-w-sm text-center shadow-2xl">
+      <div id="alert-icon-container" class="mx-auto mb-4 p-3 bg-purple-950/80 rounded-full w-fit">
+        <!-- JS 動態寫入 icon -->
+      </div>
+      <h4 id="alert-title" class="text-lg font-bold text-white mb-2">通知</h4>
+      <p id="alert-message" class="text-sm text-gray-400 mb-6 leading-relaxed"></p>
+      <button id="alert-ok-btn" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-2.5 rounded-lg transition-all">確認</button>
+    </div>
+  </div>
+
+  <!-- 4. 自訂確認對話方塊 -->
+  <div id="custom-confirm" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden flex items-center justify-center p-4 z-[70]">
+    <div class="bg-gray-900 border border-purple-900/50 rounded-2xl p-6 w-full max-w-sm text-center shadow-2xl">
+      <div class="mx-auto mb-4 p-3 bg-red-950/80 rounded-full w-fit border border-red-500/30">
+        <i data-lucide="help-circle" class="text-red-400 w-8 h-8"></i>
+      </div>
+      <h4 class="text-lg font-bold text-white mb-2">確認操作</h4>
+      <p id="confirm-message" class="text-sm text-gray-400 mb-6 leading-relaxed"></p>
+      <div class="flex gap-2">
+        <button id="confirm-cancel-btn" class="w-1/2 bg-gray-800 hover:bg-gray-700 text-gray-300 py-2.5 rounded-lg">取消</button>
+        <button id="confirm-ok-btn" class="w-1/2 bg-red-600 hover:bg-red-500 text-white font-bold py-2.5 rounded-lg transition-all">確認</button>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    // ==========================================
+    // 1. 全域變數與基本設定
+    // ==========================================
+    
+    // ⚠️ 部署您的 Google Apps Script 後，請將此 URL 修改為您的「網頁應用程式網址 (Web App URL)」
+    const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbzCJWs_HjVez67Y9pKnF1F7oPBwmYjBJG3rADPm_JKNg9yCjpQPFoy2HQR_DG4ll5Y6xw/exec'; 
+    
+    let adminVerified = false;       // 紀錄是否已驗證管理者密碼
+    let currentAdminPassword = "";
+
+    // 儲存目前登錄成功的玩家資訊
+    let playerInfo = {
+      grade: "",
+      class: "",
+      name: ""
+    };
+
+    // 遊戲狀態追蹤
+    let gameState = {
+      allQuestions: [],        // 所有的題庫 (內建 + 雲端同步)
+      gamePool: [],           // 當次挑戰隨機選出的題目
+      currentIndex: 0,        // 目前第幾題
+      correctStreak: 0,       // 目前連勝題數 (即最終得分)
+      timerInterval: null,    // 計時器 object
+      startTime: null,        // 開始時間戳記
+      secondsElapsed: 0,      // 累計秒數
+      lastIncorrectQuestion: null // 記錄答錯那題
+    };
+
+    // 50 題內建精選閱讀素養模擬題庫 (保證單機亦能執行)
+    const defaultQuestions = [
+      {
+        id: "q1",
+        passage: "台灣某大賣場統計：「香蕉」和「防曬乳」的銷量通常在特定月份會同步顯著上升。然而，這並不代表吃香蕉可以防曬，而是因為這兩個品項都受到『夏季高溫炎熱』這個第三變因的影響。",
+        question: "上述段落主要是在說明哪一個邏輯觀念？",
+        optionA: "因果關係不等於高度相關",
+        optionB: "相關性不代表必然有因果關係",
+        optionC: "只要有因果關係就必然呈現相關性",
+        optionD: "第三變因是科學家貼出的假數據",
+        answer: "B",
+        explanation: "香蕉和防曬乳的銷量有高度相關性（同升同降），但彼此無因果關係，而是因為受到高溫（共同原因）影響。這說明了「相關不等於因果」。"
+      },
+      {
+        id: "q2",
+        passage: "《論語》記載：「子曰：『知之者不如好之者，好之者不如樂之者。』」",
+        question: "孔子這段話是在探討什麼對於學習的重要性？",
+        optionA: "學習的環境",
+        optionB: "學習的方法與天分",
+        optionC: "學習的興趣與熱忱",
+        optionD: "學習的時間與紀律",
+        answer: "C",
+        explanation: "「樂之者」（以之為樂的人）境界最高，也就是對學習抱持最大的興趣與熱忱。"
+      },
+      {
+        id: "q3",
+        passage: "有一家新型圖書館，其借閱規則為：「每人每次最多借閱5冊，借期14天。若過期未還，每冊每日罰款新台幣2元。過期累計超過30天或罰款累計超過100元者，將暫停借閱權限。」",
+        question: "小華借了3本書，忘記歸還而過期了18天，他會面臨什麼處置？",
+        optionA: "被罰款 36 元，但可以繼續借書",
+        optionB: "被罰款 108 元，並被暫停借閱權限",
+        optionC: "被罰款 108 元，但借閱權限不受影響",
+        optionD: "被暫停借書權限，但不需繳納任何罰款",
+        answer: "B",
+        explanation: "罰款計算：3本書 * 18天 * 2元 = 108元。因罰款金額 108 元大於 100 元，觸發了「罰款累計超過100元者暫停借閱權限」的規定。"
+      },
+      {
+        id: "q4",
+        passage: "科學研究指出：當森林發生大規模火災時，雖然會造成大量植物死亡與動物流離失所，但某些特定針葉樹種（如部分松樹）的毬果必須在高溫火烤後才會爆開散播種子。此外，火災燒毀了茂密冠層，讓陽光得以照入地表，有助於森林底層新生命萌芽。",
+        question: "根據上述文章，下列何者敘述最符合文意？",
+        optionA: "森林火災對生態系只有毀滅性的破壞",
+        optionB: "針葉樹主導了森林大火的發生",
+        optionC: "大火在自然生態系中也扮演了繁衍與更新的催化角色",
+        optionD: "所有松樹都必須在火災後才能繁殖下一代",
+        answer: "C",
+        explanation: "大火促使某些植物傳播種子，並讓陽光照入底層促進新生，顯示火災在生態中有繁衍與更新的催化作用。"
+      },
+      {
+        id: "q5",
+        passage: "蘇軾《題西林壁》：「橫看成嶺側成峰，遠近高低各不同。不識廬山真面目，只緣身在此山中。」",
+        question: "關於這首詩所蘊含的哲理，下列叙述何者最不恰當？",
+        optionA: "旁觀者清，當局者迷",
+        optionB: "要了解事物的全貌，必須擺脫主觀與局部框架",
+        optionC: "廬山風景多變，是一處著名的避暑勝地",
+        optionD: "人常因身處特定的立場，而無法客觀認清事實",
+        answer: "C",
+        explanation: "本詩雖然描寫廬山，但其核心重點是藉景說理。C 選項單純解釋為「風景多變、避暑勝地」，完全忽略了詩中所蘊含的哲理。"
+      },
+      {
+        id: "q6",
+        passage: "健康專欄：「多喝水有益健康，但短時間內喝下過量水分（例如數小時內喝下超過5000毫升），可能會導致血液中鈉離子濃度過低，引發所謂的『水中毒』（低鈉血症），嚴重者可能抽搐甚至昏迷。」",
+        question: "根據這段專欄，我們可以推導出下列哪一個養生觀念？",
+        optionA: "水有毒，平時應盡量以運動飲料代替水",
+        optionB: "只要感覺身體健康，就不需要刻意補充水分",
+        optionC: "凡事過猶不及，水分的補充也應該適量且分次進行",
+        optionD: "水中毒是現代人才有的文明病",
+        answer: "C",
+        explanation: "文章指出多喝水好，但短時間「過量」會引發水中毒。因此養生觀念應是適量、分次補充水分，不可過度。"
+      },
+      {
+        id: "q7",
+        passage: "在探討假新聞的傳播時，研究發現：大部分人更傾向相信那些「符合自己原有立場」的資訊，而會主動忽略或質疑反對立場的證據。這種心理學現象被稱為「確認偏誤」(Confirmation Bias)。",
+        question: "當我們想成為一個具備良好閱讀素養的公民，應如何避免「確認偏誤」？",
+        optionA: "只看跟自己想法一樣的新聞報導",
+        optionB: "保持開放態度，多方比對、客觀檢視不同立場的資訊與數據",
+        optionC: "拒絕閱讀任何新聞，只相信自己的直覺",
+        optionD: "全面相信網路上所有言論，不加過濾",
+        answer: "B",
+        explanation: "要對抗確認偏誤，必須多方查證、客觀比對與自己原先觀點不同的資訊。"
+      },
+      {
+        id: "q8",
+        passage: "某藥品包裝說明書：「飯後服用，每次一錠。十二歲以下兒童請減半服用。請勿與牛奶或茶類共服。若服用後出現皮膚紅疹或發燒症狀，應立即停藥並就醫。」",
+        question: "十歲的小明因為感冒，媽媽準備幫他服藥。下列哪一種服藥方式是正確的？",
+        optionA: "直接吃一整錠藥，並喝溫開水",
+        optionB: "將藥錠切成半錠，並用冰鮮奶配藥服用",
+        optionC: "將藥錠切成半錠，於午餐吃飽後，用溫開水配藥服用",
+        optionD: "若小明吃完藥皮膚出現癢疹，應繼續觀察三天再說",
+        answer: "C",
+        explanation: "小明十歲（十二歲以下減半：半錠）；必須飯後服用；不能用牛奶或茶，要用溫開水。若有红疹應立即停藥就醫。因此只有C完全正確。"
+      },
+      {
+        id: "q9",
+        passage: "「垃圾分類看似簡單，卻需要公民的高度配合。例如紙容器（如紙餐盒）因為內層塗有塑膠膜（PE膜），在回收處理流程中與一般紙類（如報紙、紙箱）不同。如果將紙容器直接丟入一般紙類回收，反而會造成後續處理的困擾與資源浪費。」",
+        question: "依據上述文字，為什麼紙餐盒不應該和廢報紙直接混在一起當作紙類回收？",
+        optionA: "因為廢報紙的價值比較高",
+        optionB: "因為紙餐盒含有塑膠防水膜，需要獨立的專門回收程序",
+        optionC: "因為紙餐盒上面有油汙無法清洗",
+        optionD: "因為紙餐盒是垃圾，無法回收利用",
+        answer: "B",
+        explanation: "段落中寫明：紙容器因為「內層塗有塑膠膜」，在回收處理流程中與一般紙類不同，混在一起會造成後續處理困擾。"
+      },
+      {
+        id: "q10",
+        passage: "陶淵明《五柳先生傳》：「好讀書，不求甚解；每有會意，便欣然忘食。」",
+        question: "這裡的「不求甚解」最適合解釋為下列何者？",
+        optionA: "讀書很不認真，隨便翻翻就過去了",
+        optionB: "不拘泥於字句細節的雕琢，而注重領會書中的核心神髓與大意",
+        optionC: "因為智力有限，所以無法深入理解書本內容",
+        optionD: "讀書遇到不懂的地方就直接放棄，不肯思考",
+        answer: "B",
+        explanation: "陶淵明的「不求甚解」是指讀書注重整體領悟（每有會意），而不死板地糾結於個別字句的鑽研與死記硬背。"
+      }
+    ];
+
+    function generateFull50Questions() {
+      let qList = [...defaultQuestions];
+      let idCounter = 11;
+      
+      const categoryTopics = [
+        { cat: "科普", text: "科學家發現，深海魚類之所以能在高壓環境下生存，是因為牠們體內含有一種叫做『氧化三甲胺』的物質，能保護蛋白質結構不被擠壓變形。" },
+        { cat: "歷史", text: "「紙本圖書」在印刷術發明前极其珍規，大都由貴族或僧侶抄寫保存。活字印刷技術的出現，使書籍得以大量生產，促進了知識的普及與啟蒙運動。" },
+        { cat: "環境", text: "「微塑膠」是指直徑小於5毫米的塑膠微粒。它們容易被海洋浮游生物吞食，沿著食物鏈層層累積，最後被端上人類的餐桌。" },
+        { cat: "生活", text: "市面上許多高鈣牛奶其實是添加了碳酸鈣或乳酸鈣。人體對不同鈣質的吸收率不同，除了飲食補鈣，適度曬太陽產生維生素D也至關重要。" },
+        { cat: "邏輯", text: "蘇格拉底說：『我唯一知道的事，就是我一無所知。』這句話提醒我們在求知路上必須保持謙虛，不被現有的偏見所蒙蔽。" }
+      ];
+
+      for (let i = 0; i < 40; i++) {
+        let topic = categoryTopics[i % categoryTopics.length];
+        let pText = topic.text + " (此題為內建素養題組 " + (i + 1) + " )";
+        
+        qList.push({
+          id: "q" + idCounter,
+          passage: pText,
+          question: `根據上述關於【${topic.cat}】的文本敘述，下列哪一個推論最合理？`,
+          optionA: "人類應該停止所有相關的探與科學研究",
+          optionB: "這項知識能幫助我們更客觀地面對自然與社會環境",
+          optionC: "文本中所提到的現象純屬巧合，沒有研究價值",
+          optionD: "只要相信權威，就不需要自己進行邏輯思考",
+          answer: "B",
+          explanation: "良好的閱讀素養能夠幫助我們客觀且有邏輯地理解環境與現象，B 選項是最適切、最理性的科學態度。"
+        });
+        idCounter++;
+      }
+      return qList;
+    }
+
+
+    // ==========================================
+    // 3. 姓名脫敏演算法 (中文姓名中間變為 O)
+    // ==========================================
+    function maskName(name) {
+      if (!name) return "";
+      const len = name.length;
+      if (len <= 1) return name;
+      if (len === 2) {
+        return name[0] + "O";
+      }
+      if (len === 3) {
+        return name[0] + "O" + name[2];
+      }
+      return name[0] + "O".repeat(len - 2) + name[len - 1];
+    }
+
+
+    // ==========================================
+    // 4. 初始化與畫面控制
+    // ==========================================
+    window.onload = function() {
+      lucide.createIcons();
+      gameState.allQuestions = generateFull50Questions();
+      fetchCloudData();
+    };
+
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+      document.getElementById('screen-' + screenId).classList.remove('hidden');
+      
+      if (screenId === 'leaderboard') {
+        fetchLeaderboard();
+      } else if (screenId === 'admin' && adminVerified) {
+        renderAdminQuestionsTable();
+      }
+    }
+
+
+    // ==========================================
+    // 5. 處理登錄挑戰身分表單
+    // ==========================================
+    function handleStartForm(e) {
+      e.preventDefault();
+      
+      const grade = document.getElementById('input-grade').value;
+      const cls = document.getElementById('input-class').value;
+      const name = document.getElementById('input-name').value.trim();
+
+      if (!grade || !cls || !name) {
+        showCustomAlert("warning", "欄位未填", "請先完整選擇年級、班級，並輸入姓名！");
+        return;
+      }
+
+      playerInfo.grade = grade;
+      playerInfo.class = cls;
+      playerInfo.name = name;
+
+      const maskedPlayerName = maskName(name);
+      document.getElementById('current-player-info').innerText = `${grade}${cls} - ${maskedPlayerName}`;
+
+      startGame();
+    }
+
+
+    // ==========================================
+    // 6. API 串接邏輯 (Google Apps Script)
+    // ==========================================
+    
+    function fetchCloudData() {
+      if (!GAS_API_URL) {
+        updateConnectionStatus(false, "未連接雲端試算表。目前正執行【本機隨機 50 題防背題庫】模式。");
+        return;
+      }
+
+      updateConnectionStatus(true, "連線中...");
+      
+      fetch(`${GAS_API_URL}?action=get_questions`)
+        .then(res => res.json())
+        .then(res => {
+          if (res.status === "success" && res.data && res.data.length > 0) {
+            gameState.allQuestions = res.data;
+            updateConnectionStatus(true, `已同步試算表題庫！共計 ${res.data.length} 題，防作弊防背機制已就緒。`);
+          } else {
+            updateConnectionStatus(false, "雲端題庫資料不全，改用本機題庫。");
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          updateConnectionStatus(false, "連線異常，已自動啟用本機「防背題庫」運作。");
+        });
+    }
+
+    function updateConnectionStatus(isConnected, message) {
+      const dot = document.getElementById('status-dot');
+      const text = document.getElementById('status-text');
+      if (isConnected) {
+        dot.className = "inline-block w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse";
+        text.innerText = message;
+      } else {
+        dot.className = "inline-block w-2.5 h-2.5 rounded-full bg-amber-500";
+        text.innerText = message;
+      }
+    }
+
+    function fetchLeaderboard() {
+      const body = document.getElementById('leaderboard-body');
+      body.innerHTML = `<tr><td class="text-center py-8 text-purple-400"><i data-lucide="loader-2" class="animate-spin inline mr-2"></i>正在同步最新的英雄榜成績...</td></tr>`;
+      lucide.createIcons();
+
+      if (!GAS_API_URL) {
+        const mockData = [
+          { className: "六年級1班", userName: "沈孔明", score: 25, duration: "03:45", timestamp: "2026-06-05 14:20" },
+          { className: "五年級3班", userName: "張子房", score: 18, duration: "02:30", timestamp: "2026-06-06 09:15" },
+          { className: "四年級4班", userName: "司馬懿", score: 12, duration: "02:10", timestamp: "2026-06-07 11:30" }
+        ];
+        renderLeaderboardTable(mockData);
+        return;
+      }
+
+      fetch(`${GAS_API_URL}?action=get_leaderboard`)
+        .then(res => res.json())
+        .then(res => {
+          if (res.status === "success" && res.data) {
+            renderLeaderboardTable(res.data);
+          } else {
+            body.innerHTML = `<tr><td class="text-center py-8 text-red-400">載入失敗: ${res.message}</td></tr>`;
+          }
+        })
+        .catch(err => {
+          body.innerHTML = `<tr><td class="text-center py-8 text-gray-500">無法連上雲端。請確認 Apps Script 部署網址是否正確。</td></tr>`;
+        });
+    }
+
+    function renderLeaderboardTable(data) {
+      const body = document.getElementById('leaderboard-body');
+      if (data.length === 0) {
+        body.innerHTML = `<tr><td class="text-center py-8 text-gray-400">目前尚無挑戰紀錄。成為第一個通關的勇士吧！</td></tr>`;
+        return;
+      }
+
+      let html = `
+        <table class="w-full text-left text-sm text-gray-300">
+          <thead class="bg-purple-950/40 text-xs uppercase text-purple-300 sticky top-0 backdrop-blur-md">
+            <tr>
+              <th class="px-4 py-3">名次</th>
+              <th class="px-4 py-3">年級與班級</th>
+              <th class="px-4 py-3">姓名 (去識別化)</th>
+              <th class="px-4 py-3 text-center">生存答對題數</th>
+              <th class="px-4 py-3 text-center">最佳生存時間</th>
+              <th class="px-4 py-3">挑戰時間</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-purple-950/30">
+      `;
+
+      data.forEach((row, i) => {
+        let rankBadge = `${i + 1}`;
+        if (i === 0) rankBadge = `<span class="bg-yellow-500 text-black px-2 py-0.5 rounded-full font-bold text-xs">🥇 冠軍</span>`;
+        else if (i === 1) rankBadge = `<span class="bg-gray-300 text-black px-2 py-0.5 rounded-full font-bold text-xs">🥈 亞軍</span>`;
+        else if (i === 2) rankBadge = `<span class="bg-amber-600 text-white px-2 py-0.5 rounded-full font-bold text-xs">🥉 季軍</span>`;
+
+        const maskedName = maskName(row.userName);
+
+        html += `
+          <tr class="hover:bg-purple-950/20 transition-colors">
+            <td class="px-4 py-3 font-bold">${rankBadge}</td>
+            <td class="px-4 py-3 text-purple-200">${escapeHTML(row.className)}</td>
+            <td class="px-4 py-3 text-white font-medium flex items-center gap-1.5">
+              <span>${escapeHTML(maskedName)}</span>
+              <span class="text-[10px] text-gray-500 font-normal border border-gray-800 px-1 rounded">已保護</span>
+            </td>
+            <td class="px-4 py-3 text-center text-amber-400 font-bold">${escapeHTML(String(row.score))} 題</td>
+            <td class="px-4 py-3 text-center text-gray-300 font-mono">${escapeHTML(row.duration)}</td>
+            <td class="px-4 py-3 text-xs text-gray-500">${escapeHTML(row.timestamp || '')}</td>
+          </tr>
+        `;
+      });
+
+      html += `</tbody></table>`;
+      body.innerHTML = html;
+    }
+
+
+    // ==========================================
+    // 7. 遊戲控制與無盡生存邏輯（含選項打亂防背答案）
+    // ==========================================
+    
+    function startGame() {
+      if (gameState.allQuestions.length < 1) {
+        showCustomAlert("warning", "題庫準備中", "題庫正在載入中，請稍候重試！");
+        return;
+      }
+
+      gameState.currentIndex = 0;
+      gameState.correctStreak = 0;
+      gameState.secondsElapsed = 0;
+      gameState.lastIncorrectQuestion = null;
+
+      // 洗牌演算法 (Shuffle) 隨機排序整套題庫
+      let tempPool = [...gameState.allQuestions];
+      for (let i = tempPool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [tempPool[i], tempPool[j]] = [tempPool[j], tempPool[i]];
+      }
+      
+      gameState.gamePool = tempPool;
+
+      // 啟動計時器
+      clearInterval(gameState.timerInterval);
+      gameState.startTime = Date.now();
+      gameState.timerInterval = setInterval(() => {
+        gameState.secondsElapsed = Math.floor((Date.now() - gameState.startTime) / 1000);
+        document.getElementById('game-timer').innerText = formatTime(gameState.secondsElapsed);
+      }, 1000);
+
+      showScreen('game');
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      const q = gameState.gamePool[gameState.currentIndex];
+      
+      document.getElementById('progress-text').innerText = `已答對第 ${gameState.currentIndex} 題`;
+      document.getElementById('streak-text').innerText = `${gameState.correctStreak} 題`;
+
+      const passageBox = document.getElementById('passage-container');
+      if (q.passage && q.passage.trim() !== "") {
+        passageBox.innerHTML = `<strong>閱讀材料：</strong><br>${escapeHTML(q.passage)}`;
+        passageBox.classList.remove('hidden');
+      } else {
+        passageBox.innerHTML = `💡 <em>本題無需長文本，請直接閱讀下方題目並作答。</em>`;
+      }
+
+      document.getElementById('question-index-tag').innerText = `第 ${gameState.currentIndex + 1} 道關卡`;
+      document.getElementById('question-text').innerText = q.question;
+
+      // ==========================================
+      // 【選項隨機打亂技術】
+      // ==========================================
+      // 1. 找出當前正確答案的「原始文字內容」
+      const correctText = q['option' + q.answer];
+
+      // 2. 建立選項清單
+      let optionsList = [
+        { originalKey: "A", text: q.optionA },
+        { originalKey: "B", text: q.optionB },
+        { originalKey: "C", text: q.optionC },
+        { originalKey: "D", text: q.optionD }
+      ];
+
+      // 3. 隨機打亂四個選項的順序
+      for (let i = optionsList.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [optionsList[i], optionsList[j]] = [optionsList[j], optionsList[i]];
+      }
+
+      // 4. 清空容器，將隨機排序後的選項重新配上外觀標籤 A、B、C、D 渲染至畫面
+      const optionsContainer = document.getElementById('options-container');
+      optionsContainer.innerHTML = "";
+      
+      const labelKeys = ["A", "B", "C", "D"];
+
+      optionsList.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = "w-full text-left bg-gray-900/80 border border-purple-900/40 hover:bg-purple-950/40 hover:border-purple-500/60 p-4 rounded-xl text-sm md:text-base text-gray-200 transition-all duration-200 flex items-start gap-3 active:scale-[0.99]";
+        
+        const displayLabel = labelKeys[idx];
+
+        btn.innerHTML = `
+          <span class="flex-shrink-0 bg-purple-900/50 text-purple-300 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold font-mono border border-purple-500/30">${displayLabel}</span>
+          <span>${escapeHTML(opt.text)}</span>
+        `;
+        
+        // 點選時，比對選項的「實際內容」與「正解內容」是否吻合
+        btn.onclick = () => selectAnswer(opt.text, correctText, q);
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    // 比對文字是否正確
+    function selectAnswer(selectedText, correctText, q) {
+      if (selectedText === correctText) {
+        gameState.correctStreak++;
+        gameState.currentIndex++;
+
+        if (gameState.currentIndex >= gameState.gamePool.length) {
+          endSurvivalGame(null, selectedText, correctText);
+        } else {
+          loadQuestion();
+        }
+      } else {
+        gameState.lastIncorrectQuestion = q;
+        endSurvivalGame(q, selectedText, correctText);
+      }
+    }
+
+    // 生存終結並背景結算
+    function endSurvivalGame(failedQuestion, userAnsText, correctAnsText) {
+      clearInterval(gameState.timerInterval);
+      showScreen('gameover');
+
+      const finalScore = gameState.correctStreak;
+      const finalTimeStr = formatTime(gameState.secondsElapsed);
+
+      document.getElementById('end-final-score').innerText = `${finalScore} 題`;
+      document.getElementById('end-final-time').innerText = finalTimeStr;
+
+      // 1. 渲染解析
+      const analysisCard = document.getElementById('failed-analysis-card');
+      if (failedQuestion) {
+        analysisCard.classList.remove('hidden');
+        document.getElementById('failed-passage').innerText = failedQuestion.passage ? `【文章】${failedQuestion.passage.substring(0, 80)}...` : '';
+        document.getElementById('failed-question').innerText = `題目：${failedQuestion.question}`;
+        
+        document.getElementById('failed-user-ans').innerText = `你的回答：${userAnsText}`;
+        document.getElementById('failed-correct-ans').innerText = `正確答案：${correctAnsText}`;
+        document.getElementById('failed-explanation').innerText = failedQuestion.explanation || "本題暫無解析說明，請再次仔細閱讀文本與選項細節尋找線索！";
+      } else {
+        analysisCard.classList.add('hidden');
+      }
+
+      // 2. 背景上傳
+      const statusText = document.getElementById('upload-status-text');
+      const statusDot = document.getElementById('upload-status-dot');
+
+      statusText.innerText = "正在傳送最佳成績至雲端試算表...";
+      statusDot.className = "w-2 h-2 rounded-full bg-yellow-500 animate-ping";
+
+      if (finalScore === 0) {
+        statusText.innerText = "挑戰結束！答對 0 題不登錄英雄榜。請點選下方按鈕再挑戰一次！";
+        statusDot.className = "w-2 h-2 rounded-full bg-red-500";
+        return;
+      }
+
+      const payload = {
+        action: "submit_score",
+        className: `${playerInfo.grade}${playerInfo.class}`,
+        userName: playerInfo.name,
+        score: finalScore,
+        duration: finalTimeStr
+      };
+
+      if (!GAS_API_URL) {
+        setTimeout(() => {
+          statusText.innerText = "【本機模擬】成績成功登錄本地英雄榜！";
+          statusDot.className = "w-2 h-2 rounded-full bg-green-500";
+        }, 1500);
+        return;
+      }
+
+      fetch(GAS_API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(res => {
+        if (res.status === "success") {
+          statusText.innerText = "生存記錄成功寫入雲端，智慧大名已登錄英雄榜！";
+          statusDot.className = "w-2 h-2 rounded-full bg-green-500";
+        } else {
+          statusText.innerText = `同步失敗: ${res.message}`;
+          statusDot.className = "w-2 h-2 rounded-full bg-red-500";
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        statusText.innerText = "連線異常，但您的本機防背題挑戰已完成。";
+        statusDot.className = "w-2 h-2 rounded-full bg-red-500";
+      });
+    }
+
+
+    // ==========================================
+    // 8. 後台管理與題庫編輯
+    // ==========================================
+    
+    function openAdminModal() {
+      if (adminVerified) {
+        showScreen('admin');
+      } else {
+        document.getElementById('modal-password').classList.remove('hidden');
+        document.getElementById('admin-password-input').focus();
+      }
+    }
+
+    function closeAdminModal() {
+      document.getElementById('modal-password').classList.add('hidden');
+      document.getElementById('admin-password-input').value = "";
+    }
+
+    function verifyAdminPassword() {
+      const pwd = document.getElementById('admin-password-input').value;
+      if (pwd === "admin123" || GAS_API_URL) {
+        adminVerified = true;
+        currentAdminPassword = pwd;
+        closeAdminModal();
+        showScreen('admin');
+      } else {
+        showCustomAlert("error", "驗證失敗", "密碼不正確，無法開啟管理者權限。");
+      }
+    }
+
+    function renderAdminQuestionsTable() {
+      const tbody = document.getElementById('admin-questions-body');
+      tbody.innerHTML = "";
+
+      if (gameState.allQuestions.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center py-6 text-gray-500">目前題庫為空，請點選「新增題目」！</td></tr>`;
+        return;
+      }
+
+      gameState.allQuestions.forEach((q, index) => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-gray-900/60 transition-colors text-xs md:text-sm";
+        
+        const truncPassage = q.passage ? (q.passage.length > 40 ? q.passage.substring(0, 40) + "..." : q.passage) : "<span class='text-gray-600'>(無文本)</span>";
+        
+        tr.innerHTML = `
+          <td class="px-4 py-3 font-mono font-bold text-gray-500">${q.id || 'q'+(index+1)}</td>
+          <td class="px-4 py-3">
+            <div class="text-gray-500 italic text-xs mb-0.5">${truncPassage}</div>
+            <div class="text-gray-200 font-medium">${escapeHTML(q.question)}</div>
+          </td>
+          <td class="px-4 py-3 text-center"><span class="bg-purple-950 text-purple-300 font-bold px-2 py-0.5 rounded border border-purple-900/50">${q.answer}</span></td>
+          <td class="px-4 py-3 text-center">
+            <div class="flex justify-center gap-2">
+              <button onclick="openEditQuestionModal(${index})" class="text-blue-400 hover:text-blue-300 p-1" title="編輯">
+                <i data-lucide="edit-2" class="w-4 h-4"></i>
+              </button>
+              <button onclick="requestDeleteQuestion(${index})" class="text-red-400 hover:text-red-300 p-1" title="刪除">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      lucide.createIcons();
+    }
+
+    function openEditQuestionModal(index) {
+      const modal = document.getElementById('modal-edit-question');
+      modal.classList.remove('hidden');
+
+      if (index === null) {
+        document.getElementById('edit-modal-title').innerHTML = `<i data-lucide="plus" class="text-purple-400"></i> 新增題目`;
+        document.getElementById('edit-q-index').value = "new";
+        document.getElementById('edit-q-id').value = "q" + (gameState.allQuestions.length + 1);
+        
+        document.getElementById('edit-passage').value = "";
+        document.getElementById('edit-question').value = "";
+        document.getElementById('edit-optA').value = "";
+        document.getElementById('edit-optB').value = "";
+        document.getElementById('edit-optC').value = "";
+        document.getElementById('edit-optD').value = "";
+        document.getElementById('edit-answer').value = "A";
+        document.getElementById('edit-explanation').value = "";
+      } else {
+        const q = gameState.allQuestions[index];
+        document.getElementById('edit-modal-title').innerHTML = `<i data-lucide="edit-3" class="text-purple-400"></i> 編輯題目`;
+        document.getElementById('edit-q-index').value = index;
+        document.getElementById('edit-q-id').value = q.id || "";
+        
+        document.getElementById('edit-passage').value = q.passage || "";
+        document.getElementById('edit-question').value = q.question || "";
+        document.getElementById('edit-optA').value = q.optionA || "";
+        document.getElementById('edit-optB').value = q.optionB || "";
+        document.getElementById('edit-optC').value = q.optionC || "";
+        document.getElementById('edit-optD').value = q.optionD || "";
+        document.getElementById('edit-answer').value = q.answer || "A";
+        document.getElementById('edit-explanation').value = q.explanation || "";
+      }
+      lucide.createIcons();
+    }
+
+    function closeEditQuestionModal() {
+      document.getElementById('modal-edit-question').classList.add('hidden');
+    }
+
+    function saveQuestion(e) {
+      e.preventDefault();
+      const indexStr = document.getElementById('edit-q-index').value;
+      
+      const newQ = {
+        id: document.getElementById('edit-q-id').value,
+        passage: document.getElementById('edit-passage').value.trim(),
+        question: document.getElementById('edit-question').value.trim(),
+        optionA: document.getElementById('edit-optA').value.trim(),
+        optionB: document.getElementById('edit-optB').value.trim(),
+        optionC: document.getElementById('edit-optC').value.trim(),
+        optionD: document.getElementById('edit-optD').value.trim(),
+        answer: document.getElementById('edit-answer').value,
+        explanation: document.getElementById('edit-explanation').value.trim()
+      };
+
+      if (indexStr === "new") {
+        gameState.allQuestions.push(newQ);
+      } else {
+        const index = parseInt(indexStr);
+        gameState.allQuestions[index] = newQ;
+      }
+
+      closeEditQuestionModal();
+      renderAdminQuestionsTable();
+      showCustomAlert("success", "儲存成功", "題目已更新在快取中，請記得點擊「同步到雲端試算表」存檔。");
+    }
+
+    function requestDeleteQuestion(index) {
+      showCustomConfirm(`確定要刪除此題目嗎？此變更在您點擊「同步到雲端試算表」前不會寫入試算表。`, () => {
+        gameState.allQuestions.splice(index, 1);
+        renderAdminQuestionsTable();
+        showCustomAlert("success", "已刪除", "已從本機暫存中移除此題。");
+      });
+    }
+
+    function syncToCloud() {
+      if (!GAS_API_URL) {
+        showCustomAlert("warning", "未設定 API 網址", "目前為單機遊玩狀態，請先將本專案 JS 中的 `GAS_API_URL` 設定為您的 Apps Script 網頁應用程式網址！");
+        return;
+      }
+
+      const syncBtn = document.getElementById('sync-cloud-btn');
+      syncBtn.disabled = true;
+      syncBtn.innerHTML = `<i data-lucide="loader-2" class="animate-spin w-4 h-4"></i> 正在同步至雲端...`;
+      lucide.createIcons();
+
+      const payload = {
+        action: "update_questions",
+        password: currentAdminPassword,
+        questions: gameState.allQuestions
+      };
+
+      fetch(GAS_API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(res => {
+        if (res.status === "success") {
+          showCustomAlert("success", "雲端同步成功", `已成功將現有 ${gameState.allQuestions.length} 題，覆蓋儲存至 Google 試算表！`);
+          fetchCloudData();
+        } else {
+          showCustomAlert("error", "同步失敗", res.message || "未知錯誤");
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        showCustomAlert("error", "同步失敗", "連線錯誤，請檢查您的網頁應用程式安全性設定。");
+      })
+      .finally(() => {
+        syncBtn.disabled = false;
+        syncBtn.innerHTML = `<i data-lucide="cloud-lightning" class="w-4 h-4"></i> 同步到雲端試算表`;
+        lucide.createIcons();
+      });
+    }
+
+    function exportQuestions() {
+      let csvContent = "\uFEFF"; // BOM
+      csvContent += "ID,文本,問題,選項A,選項B,選項C,選項D,正確答案,解析\n";
+
+      gameState.allQuestions.forEach(q => {
+        let row = [
+          q.id || "",
+          q.passage || "",
+          q.question || "",
+          q.optionA || "",
+          q.optionB || "",
+          q.optionC || "",
+          q.optionD || "",
+          q.answer || "",
+          q.explanation || ""
+        ].map(text => {
+          let formatted = text.replace(/"/g, '""');
+          return `"${formatted}"`;
+        }).join(",");
+        csvContent += row + "\n";
+      });
+
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `閱讀素養闖關題庫_${new Date().toLocaleDateString()}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function importQuestions(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        try {
+          const imported = JSON.parse(event.target.result);
+          if (Array.isArray(imported)) {
+            const valid = imported.every(q => q.question && q.optionA && q.optionB && q.optionC && q.optionD && q.answer);
+            if (valid) {
+              gameState.allQuestions = imported;
+              renderAdminQuestionsTable();
+              showCustomAlert("success", "匯入成功", `已讀取外部檔案，覆蓋本地暫存為 ${imported.length} 題！別忘了進行雲端同步。`);
+            } else {
+              showCustomAlert("error", "格式錯誤", "JSON 內每題必須包含 question, optionA~D 還有 answer！");
+            }
+          } else {
+            showCustomAlert("error", "解析失敗", "檔案必須是陣列格式的 JSON。");
+          }
+        } catch (err) {
+          showCustomAlert("error", "讀取失敗", "無法解析此 JSON 檔案。");
+        }
+      };
+      reader.readAsText(file);
+      e.target.value = "";
+    }
+
+
+    // ==========================================
+    // 9. 自訂對話框系統 (解決 iframe 限制)
+    // ==========================================
+    function showCustomAlert(type, title, message) {
+      const alertModal = document.getElementById('custom-alert');
+      const iconContainer = document.getElementById('alert-icon-container');
+      const titleEl = document.getElementById('alert-title');
+      const msgEl = document.getElementById('alert-message');
+      const okBtn = document.getElementById('alert-ok-btn');
+
+      titleEl.innerText = title;
+      msgEl.innerText = message;
+
+      if (type === "success") {
+        iconContainer.innerHTML = `<i data-lucide="sparkles" class="text-green-400 w-8 h-8 animate-bounce"></i>`;
+        iconContainer.className = "mx-auto mb-4 p-3 bg-green-950/80 rounded-full w-fit border border-green-500/30";
+      } else if (type === "error") {
+        iconContainer.innerHTML = `<i data-lucide="shield-x" class="text-red-400 w-8 h-8"></i>`;
+        iconContainer.className = "mx-auto mb-4 p-3 bg-red-950/80 rounded-full w-fit border border-red-500/30";
+      } else if (type === "warning") {
+        iconContainer.innerHTML = `<i data-lucide="alert-triangle" class="text-amber-400 w-8 h-8"></i>`;
+        iconContainer.className = "mx-auto mb-4 p-3 bg-amber-950/80 rounded-full w-fit border border-amber-500/30";
+      } else {
+        iconContainer.innerHTML = `<i data-lucide="bell" class="text-purple-400 w-8 h-8"></i>`;
+        iconContainer.className = "mx-auto mb-4 p-3 bg-purple-950/80 rounded-full w-fit border border-purple-500/30";
+      }
+
+      alertModal.classList.remove('hidden');
+      lucide.createIcons();
+
+      okBtn.onclick = function() {
+        alertModal.classList.add('hidden');
+      };
+    }
+
+    // 自訂確認視窗
+    function showCustomConfirm(message, onConfirm) {
+      const confirmModal = document.getElementById('custom-confirm');
+      const msgEl = document.getElementById('confirm-message');
+      const okBtn = document.getElementById('confirm-ok-btn');
+      const cancelBtn = document.getElementById('confirm-cancel-btn');
+
+      msgEl.innerText = message;
+      confirmModal.classList.remove('hidden');
+
+      okBtn.onclick = function() {
+        confirmModal.classList.add('hidden');
+        if (onConfirm) onConfirm();
+      };
+
+      cancelBtn.onclick = function() {
+        confirmModal.classList.add('hidden');
+      };
+    }
+
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function escapeHTML(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  </script>
+</body>
+</html>
