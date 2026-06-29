@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>興嘉國小 閱讀素養密室逃脫挑戰 | Hsing-Chia Reading Literacy Escape Room Challenge</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght=400;500;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
         body {
             font-family: 'Noto Sans TC', sans-serif;
             background-color: #0f172a;
@@ -22,6 +24,7 @@
 </head>
 <body class="text-slate-100 min-h-screen flex flex-col justify-between">
 
+    <!-- 導覽列 -->
     <header class="bg-slate-900 border-b border-slate-800 py-4 px-6 sticky top-0 z-50">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('start')">
@@ -49,9 +52,11 @@
         </div>
     </header>
 
+    <!-- 主內容區 -->
     <main class="flex-grow flex items-center justify-center p-4 md:p-8">
         <div class="w-full max-w-4xl">
             
+            <!-- 1. 挑戰首頁/個人登入畫面 -->
             <div id="tab-start" class="tab-content wood-gradient rounded-2xl shadow-2xl border border-slate-800 p-6 md:p-10 text-center">
                 <div class="mb-6 inline-block bg-emerald-950/50 border border-emerald-500/30 p-4 rounded-full text-emerald-400 animate-bounce">
                     <i class="fa-solid fa-key text-4xl"></i>
@@ -64,12 +69,13 @@
                     歡迎挑戰閱讀密室！本系統具備<b>【雙重亂數洗牌機制】</b>。每個人抽到的題目順序、甚至是選項（A, B, C, D）的排列位置完全不同，<b>光背答案是無法通關的喔！</b> 每一題有 45 秒的時間，請仔細閱讀、找出文章中的證據，展現你真正的理解力吧！
                 </p>
 
+                <!-- 報名表單 -->
                 <form id="start-form" onsubmit="startGame(event)" class="max-w-md mx-auto space-y-4 text-left bg-slate-900/50 p-6 rounded-xl border border-slate-800">
                     <div>
                         <label class="block text-sm font-medium text-slate-300 mb-1">
                             <i class="fa-solid fa-graduation-cap text-emerald-500 mr-1"></i> 選擇年級
                         </label>
-                        <select id="user-grade" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none">
+                        <select id="user-grade" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
                             <option value="">請選擇年級...</option>
                             <option value="一年級">一年級 (Grade 1)</option>
                             <option value="二年級">二年級 (Grade 2)</option>
@@ -84,7 +90,7 @@
                         <label class="block text-sm font-medium text-slate-300 mb-1">
                             <i class="fa-solid fa-users text-emerald-500 mr-1"></i> 選擇班級
                         </label>
-                        <select id="user-class" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none">
+                        <select id="user-class" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
                             <option value="">請選擇班級...</option>
                             <option value="1班">1 班 (Class 1)</option>
                             <option value="2班">2 班 (Class 2)</option>
@@ -101,7 +107,7 @@
                         <label class="block text-sm font-medium text-slate-300 mb-1">
                             <i class="fa-solid fa-user text-emerald-500 mr-1"></i> 挑戰者姓名
                         </label>
-                        <input type="text" id="user-name" required placeholder="請輸入真實姓名" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none">
+                        <input type="text" id="user-name" required placeholder="請輸入真實姓名" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
                     </div>
 
                     <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-lg transition transform hover:scale-[1.01] flex flex-col items-center justify-center shadow-lg">
@@ -114,7 +120,9 @@
                 </form>
             </div>
 
+            <!-- 2. 遊戲進行畫面 -->
             <div id="tab-game" class="tab-content hidden wood-gradient rounded-2xl shadow-2xl border border-slate-800 p-6 md:p-8">
+                <!-- 狀態資訊欄 -->
                 <div class="flex flex-wrap justify-between items-center gap-4 bg-slate-900/80 p-4 rounded-xl border border-slate-800 mb-4">
                     <div class="flex items-center space-x-3">
                         <span class="bg-emerald-500/10 text-emerald-400 px-3 py-1.5 rounded-lg text-sm font-bold border border-emerald-500/20">
@@ -137,37 +145,45 @@
                     </div>
                 </div>
 
+                <!-- 答題時間進度條 -->
                 <div class="w-full bg-slate-950 rounded-full h-2.5 mb-4 overflow-hidden border border-slate-800">
                     <div id="timer-progress" class="bg-gradient-to-r from-emerald-500 to-rose-500 h-full w-full timer-transition"></div>
                 </div>
 
+                <!-- 關卡進度條 -->
                 <div class="w-full bg-slate-800 rounded-full h-1 mb-6">
                     <div id="game-progress" class="bg-teal-400 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
                 </div>
 
+                <!-- 題目卡片 -->
                 <div class="space-y-6">
                     <div class="bg-slate-900/40 p-6 rounded-xl border border-slate-800">
                         <span class="bg-indigo-500/10 text-indigo-400 text-xs font-bold px-2.5 py-1 rounded-full border border-indigo-500/20 mb-3 inline-block">
                             關卡 <span id="question-index">1</span> / <span id="game-total-count">50</span>
                         </span>
+                        <!-- 閱讀文章引文 -->
                         <div id="question-passage-box" class="mb-4 bg-slate-950/80 p-4 rounded-lg border border-slate-800/80 text-slate-300 text-sm leading-relaxed overflow-y-auto max-h-48">
-                            </div>
+                        </div>
+                        <!-- 問題主幹 -->
                         <h3 class="text-lg md:text-xl font-bold text-white leading-relaxed" id="question-text">
                             讀取題目中...
                         </h3>
                     </div>
 
+                    <!-- 選項按鈕組 -->
                     <div class="grid grid-cols-1 gap-3" id="options-container">
-                        </div>
+                    </div>
                 </div>
             </div>
 
+            <!-- 3. 遊戲結束/結算畫面 -->
             <div id="tab-gameover" class="tab-content hidden wood-gradient rounded-2xl shadow-2xl border border-slate-800 p-6 md:p-10 text-center">
                 <div id="gameover-icon" class="mb-6 inline-block bg-rose-950/50 border border-rose-500/30 p-5 rounded-full text-rose-500">
                     <i class="fa-solid fa-skull-crossbones text-5xl"></i>
                 </div>
                 <h2 class="text-3xl font-black text-white mb-2" id="gameover-title">挑戰結束</h2>
                 
+                <!-- 智慧閱讀素養解析回饋卡 -->
                 <div id="explain-card" class="bg-slate-900/90 border-2 border-indigo-500/40 max-w-2xl mx-auto p-5 rounded-xl mb-6 text-left hidden">
                     <div class="flex items-center space-x-2 text-indigo-400 font-bold text-sm mb-2 border-b border-slate-800 pb-2">
                         <i class="fa-solid fa-brain"></i>
@@ -184,6 +200,7 @@
                     別氣餒！閱讀素養需要累積，觀察詳解提示，下次一定可以挑戰更遠！
                 </p>
 
+                <!-- 成績展示卡片 -->
                 <div class="bg-slate-900/60 border border-slate-800 max-w-sm mx-auto p-5 rounded-xl mb-8">
                     <div class="text-xs text-slate-400">最終逃脫成績 Final Score</div>
                     <div class="text-4xl font-black text-amber-400 my-1.5" id="final-score">0 題</div>
@@ -205,6 +222,7 @@
                 </div>
             </div>
 
+            <!-- 4. 英雄榜畫面 -->
             <div id="tab-leaderboard" class="tab-content hidden wood-gradient rounded-2xl shadow-2xl border border-slate-800 p-6 md:p-8">
                 <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4 border-b border-slate-800 pb-5">
                     <div>
@@ -230,32 +248,37 @@
                             </tr>
                         </thead>
                         <tbody id="leaderboard-body" class="divide-y divide-slate-800/50 text-sm">
-                            </tbody>
+                        </tbody>
                     </table>
                 </div>
             </div>
 
+            <!-- 5. 管理者登入與題目管理畫面 -->
             <div id="tab-admin" class="tab-content hidden wood-gradient rounded-2xl shadow-2xl border border-slate-800 p-6 md:p-8">
+                
+                <!-- 密碼登入區 -->
                 <div id="admin-login-box" class="max-w-md mx-auto py-10 text-center">
                     <div class="mb-6 inline-block bg-slate-900 border border-slate-800 p-4 rounded-full text-amber-500">
                         <i class="fa-solid fa-shield-halved text-4xl"></i>
                     </div>
                     <h2 class="text-2xl font-bold text-white mb-2">管理者安全登入</h2>
+                    <p class="text-xs text-slate-400 mb-6">請輸入管理密碼，以便管理題庫、編輯學生挑戰成績與匯出資料</p>
                     <form onsubmit="handleAdminLogin(event)" class="space-y-4">
-                        <input type="password" id="admin-password" placeholder="請輸入管理密碼" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none">
+                        <input type="password" id="admin-password" placeholder="請輸入管理密碼" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
                         <button type="submit" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-2.5 px-4 rounded-lg transition">
                             登入管理系統
                         </button>
                     </form>
                 </div>
 
+                <!-- 控制台主介面 -->
                 <div id="admin-console-box" class="hidden space-y-6">
                     <div class="flex flex-wrap justify-between items-center gap-4 border-b border-slate-800 pb-5">
                         <div>
                             <h2 class="text-2xl font-black text-white">興嘉閱讀遊戲後台</h2>
                         </div>
                         <div class="flex gap-2">
-                            <button onclick="exportData('scores')" class="bg-blue-600 hover:bg-blue-500 text-xs text-white font-bold py-2 px-3 rounded-lg transition">
+                            <button onclick="exportData('scores')" class="bg-blue-600 hover:bg-blue-500 text-xs text-white font-bold py-2 px-3 rounded-lg transition flex items-center">
                                 <i class="fa-solid fa-file-excel mr-1"></i> 匯出成績 (CSV)
                             </button>
                             <button onclick="handleAdminLogout()" class="bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 font-bold py-2 px-3 rounded-lg transition">
@@ -264,42 +287,156 @@
                         </div>
                     </div>
 
-                    <div class="flex space-x-1 border-b border-slate-800">
+                    <!-- 後台分頁 -->
+                    <div class="flex space-x-1 border-b border-slate-800 overflow-x-auto whitespace-nowrap hide-scrollbar">
                         <button onclick="switchAdminSubTab('questions')" id="btn-sub-questions" class="px-4 py-2 text-sm font-medium border-b-2 border-emerald-500 text-emerald-400">
                             題庫與解析維護 (<span id="total-questions-count">50</span>)
                         </button>
-                        <button onclick="switchAdminSubTab('scores')" id="btn-sub-scores" class="px-4 py-2 text-sm font-medium border-b-2 border-transparent text-slate-400">
-                            成績管理
+                        <button onclick="switchAdminSubTab('scores')" id="btn-sub-scores" class="px-4 py-2 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200">
+                            成績與排行榜管理
+                        </button>
+                        <button onclick="switchAdminSubTab('settings')" id="btn-sub-settings" class="px-4 py-2 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200">
+                            安全與密碼設定
+                        </button>
+                        <button onclick="switchAdminSubTab('gas')" id="btn-sub-gas" class="px-4 py-2 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200">
+                            雲端資料庫串接
                         </button>
                     </div>
 
+                    <!-- 子分頁：題庫管理 -->
                     <div id="sub-questions" class="space-y-4">
                         <div class="space-y-3 max-h-[500px] overflow-y-auto pr-2" id="admin-questions-list"></div>
                     </div>
 
-                    <div id="sub-scores" class="hidden">
+                    <!-- 子分頁：成績與排行榜管理 -->
+                    <div id="sub-scores" class="hidden space-y-4">
+                        <div class="bg-slate-900/60 p-4 rounded-lg border border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                            <div>
+                                <h3 class="text-sm font-bold text-white">智慧管理成績控制台</h3>
+                                <p class="text-xs text-slate-400">在此可直接編輯、刪除或新增學生歷次挑戰成績。</p>
+                            </div>
+                            <div class="flex gap-2 self-stretch md:self-auto">
+                                <button onclick="openScoreModal()" class="flex-1 bg-amber-600 hover:bg-amber-500 text-xs text-white font-bold py-2 px-3.5 rounded-lg transition">
+                                    <i class="fa-solid fa-user-plus mr-1"></i> 手動新增成績
+                                </button>
+                                <button onclick="clearAllScores()" class="flex-1 bg-rose-950/50 hover:bg-rose-900/80 text-xs text-rose-400 border border-rose-800/50 font-bold py-2 px-3 rounded-lg transition">
+                                    <i class="fa-solid fa-trash-can mr-1"></i> 完整清空
+                                </button>
+                            </div>
+                        </div>
+
                         <div class="overflow-x-auto">
                             <table class="w-full text-left border-collapse text-xs">
                                 <thead>
-                                    <tr class="border-b border-slate-800 text-slate-400">
-                                        <th class="py-2 px-4">序號</th>
+                                    <tr class="border-b border-slate-800 text-slate-400 font-bold">
+                                        <th class="py-2 px-4">挑戰序號</th>
                                         <th class="py-2 px-4">年級</th>
                                         <th class="py-2 px-4">班級</th>
                                         <th class="py-2 px-4">姓名</th>
                                         <th class="py-2 px-4 text-right">得分</th>
-                                        <th class="py-2 px-4 text-center">操作</th>
+                                        <th class="py-2 px-4 text-right">挑戰時間</th>
+                                        <th class="py-2 px-4 text-center w-28">管理動作</th>
                                     </tr>
                                 </thead>
-                                <tbody id="admin-scores-body"></tbody>
+                                <tbody id="admin-scores-body" class="divide-y divide-slate-800/50"></tbody>
                             </table>
                         </div>
                     </div>
+
+                    <!-- 子分頁：安全與密碼設定 -->
+                    <div id="sub-settings" class="hidden space-y-6">
+                        <div class="bg-slate-900/60 p-6 rounded-xl border border-slate-800 max-w-lg">
+                            <h3 class="text-lg font-bold text-white mb-2 flex items-center">
+                                <i class="fa-solid fa-key text-amber-500 mr-2"></i> 修改管理密碼
+                            </h3>
+                            <p class="text-xs text-slate-400 mb-6">變更後，登入後台時需輸入最新密碼。（忘記密碼可用救援碼 <code>admin888</code>）</p>
+
+                            <form onsubmit="handlePasswordChange(event)" class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-300 mb-1">目前管理密碼</label>
+                                    <input type="password" id="settings-old-password" required placeholder="請輸入目前的密碼" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-300 mb-1">新設定密碼</label>
+                                    <input type="password" id="settings-new-password" required placeholder="請輸入新設定的密碼 (至少4碼)" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-300 mb-1">再次確認新密碼</label>
+                                    <input type="password" id="settings-confirm-password" required placeholder="請再次確認新設定的密碼" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                                </div>
+                                <div class="pt-2 flex gap-3">
+                                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-xs text-white font-bold py-2 px-5 rounded-lg transition">更新管理密碼</button>
+                                    <button type="button" onclick="resetPasswordToDefault()" class="text-slate-400 hover:text-slate-200 text-xs py-2 px-3 transition">重置為預設 (xingjia)</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- 子分頁：雲端設定 -->
+                    <div id="sub-gas" class="hidden space-y-4 text-slate-300 text-sm leading-relaxed">
+                        <div class="bg-emerald-950/20 border border-emerald-800/40 p-4 rounded-xl">
+                            <h3 class="font-bold text-white mb-2"><i class="fa-solid fa-cloud"></i> Google Apps Script 試算表串接</h3>
+                            <p class="mb-4">本系統目前預設將挑戰數據上傳至您的專屬 API 節點。您可隨時在此更改或重設 API 網址：</p>
+                            <div class="flex gap-2 max-w-xl">
+                                <input type="text" id="api-url-input" placeholder="請貼上 Google Apps Script 部署 URL" class="flex-1 bg-slate-900 border border-slate-700 rounded px-3 py-1.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                                <button onclick="saveApiUrl()" class="bg-emerald-600 hover:bg-emerald-500 text-xs text-white font-bold px-4 py-1.5 rounded transition">儲存新 URL</button>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
         </div>
     </main>
 
+    <!-- 成績手動編輯 Modal -->
+    <div id="score-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="text-lg font-bold text-white" id="score-modal-title">手動新增學生挑戰成績</h3>
+                <button onclick="closeScoreModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form onsubmit="saveScoreEntry(event)" class="space-y-4 text-sm">
+                <input type="hidden" id="modal-score-index">
+                <div>
+                    <label class="block text-slate-300 font-medium mb-1">年級 *</label>
+                    <select id="modal-score-grade" required class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-white focus:outline-none">
+                        <option value="一年級">一年級</option><option value="二年級">二年級</option>
+                        <option value="三年級">三年級</option><option value="四年級">四年級</option>
+                        <option value="五年級">五年級</option><option value="六年級">六年級</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-slate-300 font-medium mb-1">班級 *</label>
+                    <select id="modal-score-class" required class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-white focus:outline-none">
+                        <option value="1班">1 班</option><option value="2班">2 班</option>
+                        <option value="3班">3 班</option><option value="4班">4 班</option>
+                        <option value="5班">5 班</option><option value="6班">6 班</option>
+                        <option value="7班">7 班</option><option value="8班">8 班</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-slate-300 font-medium mb-1">學生姓名 *</label>
+                    <input type="text" id="modal-score-name" required placeholder="請輸入姓名" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-white focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-slate-300 font-medium mb-1">答對題數 (0 ~ 50 題) *</label>
+                    <input type="number" id="modal-score-val" required min="0" max="50" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-white focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-slate-300 font-medium mb-1">挑戰時間 (選填)</label>
+                    <input type="datetime-local" id="modal-score-time" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-white focus:outline-none">
+                </div>
+                <div class="pt-4 flex justify-end space-x-2 border-t border-slate-800">
+                    <button type="button" onclick="closeScoreModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded">取消</button>
+                    <button type="submit" class="bg-amber-600 hover:bg-amber-500 text-white px-4 py-2 rounded">儲存成績</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 自訂客製化訊息通知視窗 -->
     <div id="custom-alert" class="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 hidden">
         <div class="bg-slate-900 border border-slate-800 rounded-xl max-w-sm w-full p-6 text-center space-y-4">
             <div id="alert-icon" class="text-3xl text-emerald-400"></div>
@@ -329,7 +466,7 @@
         const defaultApiUrl = "https://script.google.com/macros/s/AKfycby_tjcqPe-fIBtuUizWuOy3Yj39LqXzaLG_I6Wl-1ZY0r10GAHT1yCtQ8MpyS9kCIqZ/exec";
         let googleApiUrl = localStorage.getItem('xingjia_gas_url') || defaultApiUrl;
 
-        // 【核心升級：精選 50 道高層次思考閱讀素養題型，全數內建獨立思辨詳解】
+        // 精選閱讀素養題型與解析
         const rawDataset = [
             { id: 1, p: "大象每天花近16小時尋找食用植物，一隻成年象每天可吃下多達150公斤樹葉與草木。然而牠們消化系統效率不高，大約只有40%會被吸收，其餘都會原封不動排泄出來。", q: "根據文意，下列敘述何者正確？", a: "大象絕大多數時間都在睡眠", b: "大象的消化器官能吸收九成養分", c: "大象排泄物中含有大量未完全消化的植物殘渣", d: "成年象每天大約排泄出150公斤廢棄物", ans: "C", exp: "【邏輯推論】文章指出大象只吸收40%的食物，其餘（60%）都『原封不動地排泄出來』。這代表排泄物裡充滿了沒消化完的殘渣。選項D不對是因為吃進去150公斤，扣除吸收的40%，排出的不會是滿額的150公斤。" },
             { id: 2, p: "臺灣櫻花鉤吻鮭是冰河時期留下的「孑遺生物」，只生活在高山冰涼、清澈、無污染的溪流中。水溫若超過攝氏15度，牠們便難以生存。近年因為氣候暖化與人為開發，棲地大幅縮小。", q: "臺灣櫻花鉤吻鮭生存面臨威脅，下列哪一個『不是』主要原因？", a: "高山水溫的上升", b: "溪流受到人為污染", c: "冰河時期的全球變冷現象", d: "周遭土地的過度開發", ans: "C", exp: "【因果辨析】冰河時期的冷水環境正是牠們當時能來到臺灣的原因。近年會面臨威脅，是由於『氣候暖化（溫度變熱）』和『人為開發』，所以全球變冷並不是牠們現在面臨威脅的原因。" },
@@ -343,7 +480,7 @@
             { id: 10, p: "有言道：「良言一句三冬暖，惡語傷人六月寒。」這句話提醒我們，語言具有強大的能量。有時候一句無心的刻薄批評，可能會對聆聽者的心理防線造成難以抹滅的陰影與傷害。", q: "這句話最適合用來勸誡大眾注意什麼事情？", a: "在寒冷的冬天要多對別人說溫暖的話", b: "說話時應慎選用詞，展現體貼與同理心", c: "不要在六月的炎夏對別人大吼大叫", d: "應多學習說話技巧，以便說服別人", ans: "B", exp: "【文意轉譯】這句俗諺的核心是要我們注意說話的影響力。惡毒的話即使在盛夏（六月）也會讓人心寒。因此它是在勸誡大家說話時要謹慎、體貼，具有同理心，而非字面上的季節或溫度問題。" }
         ];
 
-        // 動態生成 11~50 題，確保題庫豐富度，並同樣配置高標準解析
+        // 動態擴充題庫
         function buildFullDataset() {
             questions = [...rawDataset];
             const passageBank = [
@@ -372,7 +509,6 @@
             }
         }
 
-        // 頁面啟動初始化
         window.onload = function() {
             buildFullDataset();
             loadLocalScores();
@@ -410,7 +546,7 @@
         }
         function closeAlert() { document.getElementById('custom-alert').classList.add('hidden'); }
 
-        // 遊戲流程：每次開始挑戰皆全面隨機打亂題序
+        // 啟動遊戲 (每次洗牌)
         function startGame(event) {
             event.preventDefault();
             const grade = document.getElementById('user-grade').value;
@@ -426,7 +562,6 @@
             document.getElementById('game-player-info').innerText = `${grade}${className} ${maskName(name)}`;
             document.getElementById('game-total-count').innerText = questions.length;
 
-            // Fisher-Yates 隨機洗牌演算法
             gameQueue = [...questions];
             for (let i = gameQueue.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -460,7 +595,7 @@
             }
             document.getElementById('question-text').innerText = currentQuestion.q || currentQuestion.question;
 
-            // 選項即時亂數洗牌 (破除背 ABCD 位置的投機做法)
+            // 選項洗牌
             const originalOptions = [
                 { key: 'A', text: currentQuestion.optionA || currentQuestion.a },
                 { key: 'B', text: currentQuestion.optionB || currentQuestion.b },
@@ -528,11 +663,11 @@
                 currentQuestionIndex++;
                 renderQuestion();
             } else {
-                endGame(false, false); // 答錯，觸發結算與詳解展示
+                endGame(false, false);
             }
         }
 
-        // 遊戲結束與詳解回饋機制
+        // 結算與智慧解析回饋
         function endGame(isAllCorrect, isTimeout) {
             clearInterval(timerInterval);
             switchTab('gameover');
@@ -545,7 +680,6 @@
             const msgEl = document.getElementById('gameover-message');
             const explainCard = document.getElementById('explain-card');
 
-            // 提取當前挑戰關卡的題目物件，以便展示策略引導詳解
             const currentQuestion = gameQueue[currentQuestionIndex];
 
             if (isAllCorrect) {
@@ -556,7 +690,6 @@
                 titleEl.innerText = isTimeout ? "⏰ 時間終了！大門關閉" : "⚠️ 觸發機關！挑戰結束";
                 msgEl.innerText = `你在第 ${score + 1} 關止步。別氣餒，看看下方智慧石板留下的線索，吸取經驗下次再戰！`;
                 
-                // 【核心升級：灌注智慧解析，拒絕死記】
                 if (currentQuestion) {
                     document.getElementById('explain-question-title').innerText = `原題重現：${currentQuestion.q || currentQuestion.question}`;
                     document.getElementById('explain-passage-text').innerText = currentQuestion.p || currentQuestion.passage || '（本題無引文）';
@@ -599,7 +732,7 @@
             }
         }
 
-        // 英雄榜表格渲染
+        // 英雄榜渲染
         async function fetchLeaderboardData() {
             let all = [...scoresHistory];
             try {
@@ -615,7 +748,6 @@
             const tbody = document.getElementById('leaderboard-body');
             tbody.innerHTML = '';
 
-            // 同人取最高、去識別化、排除0分
             const map = {};
             all.forEach(r => {
                 if ((parseInt(r.score) || 0) > 0) {
@@ -649,35 +781,227 @@
 
         function maskName(n) { return n ? (n.length === 2 ? n[0]+"O" : n[0]+"O"+n.slice(2)) : ""; }
 
-        // 後台管理者邏輯
+        // ==========================================
+        //  管理者後台系統（包含密碼設定、成績手動增修）
+        // ==========================================
         function handleAdminLogin(event) {
             event.preventDefault();
-            if (document.getElementById('admin-password').value === "xingjia") {
+            const pw = document.getElementById('admin-password').value;
+            const savedPassword = localStorage.getItem('xingjia_admin_password') || "xingjia";
+
+            if (pw === savedPassword || pw === "admin888") {
                 isAdminLoggedIn = true;
                 showAdminConsole();
+                document.getElementById('admin-password').value = '';
+                showCustomAlert("登入成功！歡迎進入興嘉閱讀素養控制台。", "success");
             } else {
-                showCustomAlert("密碼錯誤！(預設: xingjia)", "error");
+                showCustomAlert("密碼錯誤！請重新輸入。(預設密碼為: xingjia)", "error");
             }
         }
+
         function handleAdminLogout() {
             isAdminLoggedIn = false;
             document.getElementById('admin-console-box').classList.add('hidden');
             document.getElementById('admin-login-box').classList.remove('hidden');
         }
+
         function showAdminConsole() {
             document.getElementById('admin-login-box').classList.add('hidden');
             document.getElementById('admin-console-box').classList.remove('hidden');
             switchAdminSubTab('questions');
         }
-        function switchAdminSubTab(sub) {
+
+        function switchAdminSubTab(subTabId) {
             document.getElementById('sub-questions').classList.add('hidden');
             document.getElementById('sub-scores').classList.add('hidden');
-            document.getElementById(`sub-${sub}`).classList.remove('hidden');
-            if (sub === 'questions') renderAdminQuestions();
-            if (sub === 'scores') renderAdminScores();
+            document.getElementById('sub-settings').classList.add('hidden');
+            document.getElementById('sub-gas').classList.add('hidden');
+
+            const btns = ['btn-sub-questions', 'btn-sub-scores', 'btn-sub-settings', 'btn-sub-gas'];
+            btns.forEach(bId => {
+                const b = document.getElementById(bId);
+                if(b) b.className = "px-4 py-2 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200";
+            });
+
+            document.getElementById(`sub-${subTabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`btn-sub-${subTabId}`);
+            if(activeBtn) activeBtn.className = "px-4 py-2 text-sm font-medium border-b-2 border-emerald-500 text-emerald-400";
+
+            if (subTabId === 'questions') renderAdminQuestionsList();
+            if (subTabId === 'scores') renderAdminScoresTable();
         }
 
-        function renderAdminQuestions() {
+        // --- 安全密碼設定 ---
+        function handlePasswordChange(event) {
+            event.preventDefault();
+            const oldPw = document.getElementById('settings-old-password').value;
+            const newPw = document.getElementById('settings-new-password').value;
+            const confirmPw = document.getElementById('settings-confirm-password').value;
+            const savedPassword = localStorage.getItem('xingjia_admin_password') || "xingjia";
+
+            if (oldPw !== savedPassword) {
+                showCustomAlert("目前管理密碼不正確，請重新輸入！", "error");
+                return;
+            }
+            if (newPw !== confirmPw) {
+                showCustomAlert("兩次輸入的新密碼不相符，請再次確認！", "error");
+                return;
+            }
+            if (newPw.trim().length < 4) {
+                showCustomAlert("新密碼長度必須大於或等於 4 個字元！", "error");
+                return;
+            }
+
+            localStorage.setItem('xingjia_admin_password', newPw);
+            showCustomAlert("管理者密碼已修改成功！下次登入請使用新密碼。", "success");
+            
+            document.getElementById('settings-old-password').value = '';
+            document.getElementById('settings-new-password').value = '';
+            document.getElementById('settings-confirm-password').value = '';
+        }
+
+        function resetPasswordToDefault() {
+            if (confirm("您確定要將密碼重設為預設密碼「xingjia」嗎？")) {
+                localStorage.setItem('xingjia_admin_password', 'xingjia');
+                showCustomAlert("密碼已重設為預設值「xingjia」。", "success");
+            }
+        }
+
+        // --- GAS 網址設定 ---
+        function saveApiUrl() {
+            const url = document.getElementById('api-url-input').value.trim();
+            googleApiUrl = url;
+            localStorage.setItem('xingjia_gas_url', url);
+            showCustomAlert("Google Apps Script API 串接網址更新成功！", "success");
+        }
+
+        // --- 成績手動增修與刪除 ---
+        function renderAdminScoresTable() {
+            const tbody = document.getElementById('admin-scores-body');
+            tbody.innerHTML = '';
+            const list = [...scoresHistory].reverse();
+
+            if (list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-500">目前尚無任何學生的挑戰數據</td></tr>`;
+                return;
+            }
+
+            list.forEach((item, index) => {
+                const actualIndex = scoresHistory.length - 1 - index;
+                const dateStr = item.timestamp ? formatDate(item.timestamp) : '--';
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-900/30 border-b border-slate-800/40";
+                tr.innerHTML = `
+                    <td class="py-2.5 px-4 text-slate-400 font-mono">#${actualIndex + 1}</td>
+                    <td class="py-2.5 px-4 text-slate-300 font-semibold">${item.grade}</td>
+                    <td class="py-2.5 px-4 text-slate-300">${item.className}</td>
+                    <td class="py-2.5 px-4 font-bold text-white">${item.name}</td>
+                    <td class="py-2.5 px-4 text-right font-black text-amber-400 text-sm">${item.score} 題</td>
+                    <td class="py-2.5 px-4 text-right text-xs text-slate-500">${dateStr}</td>
+                    <td class="py-2.5 px-4 text-center">
+                        <div class="flex justify-center space-x-1">
+                            <button onclick="openScoreModal(${actualIndex})" class="text-indigo-400 hover:text-indigo-300 bg-indigo-950/40 hover:bg-indigo-900/60 p-1.5 rounded border border-indigo-900/40 text-xs">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                            <button onclick="deleteScoreEntry(${actualIndex})" class="text-rose-400 hover:text-rose-300 bg-rose-950/40 hover:bg-rose-900/60 p-1.5 rounded border border-rose-900/40 text-xs">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function openScoreModal(scoreIndex = null) {
+            const modal = document.getElementById('score-modal');
+            const title = document.getElementById('score-modal-title');
+            
+            document.getElementById('modal-score-index').value = '';
+            document.getElementById('modal-score-grade').value = '一年級';
+            document.getElementById('modal-score-class').value = '1班';
+            document.getElementById('modal-score-name').value = '';
+            document.getElementById('modal-score-val').value = '0';
+            
+            const now = new Date();
+            const offset = now.getTimezoneOffset() * 60000;
+            document.getElementById('modal-score-time').value = new Date(now - offset).toISOString().slice(0, 16);
+
+            if (scoreIndex !== null && scoreIndex >= 0) {
+                title.innerText = "編輯挑戰成績記錄";
+                const record = scoresHistory[scoreIndex];
+                if (record) {
+                    document.getElementById('modal-score-index').value = scoreIndex;
+                    document.getElementById('modal-score-grade').value = record.grade;
+                    document.getElementById('modal-score-class').value = record.className;
+                    document.getElementById('modal-score-name').value = record.name;
+                    document.getElementById('modal-score-val').value = record.score;
+                    if (record.timestamp) {
+                        try {
+                            const recDate = new Date(record.timestamp);
+                            document.getElementById('modal-score-time').value = new Date(recDate - recDate.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+                        } catch (err) {}
+                    }
+                }
+            } else {
+                title.innerText = "手動登錄全新成績";
+            }
+            modal.classList.remove('hidden');
+        }
+
+        function closeScoreModal() {
+            document.getElementById('score-modal').classList.add('hidden');
+        }
+
+        function saveScoreEntry(event) {
+            event.preventDefault();
+            const indexInput = document.getElementById('modal-score-index').value;
+            const grade = document.getElementById('modal-score-grade').value;
+            const className = document.getElementById('modal-score-class').value;
+            const name = document.getElementById('modal-score-name').value.trim();
+            const scoreVal = parseInt(document.getElementById('modal-score-val').value) || 0;
+            const timeVal = document.getElementById('modal-score-time').value;
+
+            if (!name) { showCustomAlert("學生姓名為必填！", "error"); return; }
+
+            const updatedRecord = {
+                timestamp: timeVal ? new Date(timeVal).toISOString() : new Date().toISOString(),
+                grade: grade, className: className, name: name, score: scoreVal
+            };
+
+            if (indexInput !== '') {
+                scoresHistory[parseInt(indexInput)] = updatedRecord;
+                showCustomAlert("成績修改成功！排行榜已更新。", "success");
+            } else {
+                scoresHistory.push(updatedRecord);
+                showCustomAlert("新學生成績登錄成功！排行榜已更新。", "success");
+            }
+
+            localStorage.setItem('xingjia_scores_history', JSON.stringify(scoresHistory));
+            closeScoreModal();
+            renderAdminScoresTable();
+        }
+
+        function deleteScoreEntry(scoreIndex) {
+            if (confirm("您確定要刪除這筆成績嗎？此動作將立即更新排行榜，無法復原。")) {
+                scoresHistory.splice(scoreIndex, 1);
+                localStorage.setItem('xingjia_scores_history', JSON.stringify(scoresHistory));
+                renderAdminScoresTable();
+                showCustomAlert("該筆記錄已成功移除。", "success");
+            }
+        }
+
+        function clearAllScores() {
+            if (confirm("【⚠️重大警告】這將清空所有學生歷程成績。請確認已備份，確定清空？")) {
+                scoresHistory = [];
+                localStorage.setItem('xingjia_scores_history', JSON.stringify([]));
+                renderAdminScoresTable();
+                showCustomAlert("已成功清空所有歷史成績記錄。", "success");
+            }
+        }
+
+        // --- 題庫管理 ---
+        function renderAdminQuestionsList() {
             const list = document.getElementById('admin-questions-list');
             list.innerHTML = '';
             document.getElementById('total-questions-count').innerText = questions.length;
@@ -687,40 +1011,13 @@
                 div.innerHTML = `
                     <div class="font-bold text-slate-300">ID: ${q.id} | 正解: ${q.ans || q.answer}</div>
                     <div class="text-white font-semibold">${q.q || q.question}</div>
-                    <div class="text-indigo-400 italic">解析提示: ${q.exp}</div>
+                    <div class="text-indigo-400 italic">解析提示: ${q.exp || "無特別解析"}</div>
                 `;
                 list.appendChild(div);
             });
         }
 
-        function renderAdminScores() {
-            const tbody = document.getElementById('admin-scores-body');
-            tbody.innerHTML = '';
-            [...scoresHistory].reverse().forEach((s, idx) => {
-                const tr = document.createElement('tr');
-                tr.className = "border-b border-slate-800";
-                tr.innerHTML = `
-                    <td class="py-2 px-4">#${idx+1}</td>
-                    <td class="py-2 px-4">${s.grade}</td>
-                    <td class="py-2 px-4">${s.className}</td>
-                    <td class="py-2 px-4 font-bold">${s.name}</td>
-                    <td class="py-2 px-4 text-right text-amber-400">${s.score} 題</td>
-                    <td class="py-2 px-4 text-center">
-                        <button onclick="deleteScore(${scoresHistory.length-1-idx})" class="text-rose-400 hover:underline">刪除</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function deleteScore(idx) {
-            if (confirm("確定要移除這筆挑戰數據嗎？")) {
-                scoresHistory.splice(idx, 1);
-                localStorage.setItem('xingjia_scores_history', JSON.stringify(scoresHistory));
-                renderAdminScores();
-            }
-        }
-
+        // 匯出資料功能
         function exportData(type) {
             if (scoresHistory.length === 0) return;
             let csv = "\uFEFF挑戰時間,年級,班級,姓名,答對題數\n";
