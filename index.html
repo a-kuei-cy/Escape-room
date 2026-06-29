@@ -192,7 +192,7 @@
                         <h2 class="text-2xl font-black text-white flex items-center">
                             <i class="fa-solid fa-trophy text-amber-400 mr-2"></i> 興嘉智慧英雄榜
                         </h2>
-                        <p class="text-xs text-slate-400 mt-1">呈現校內挑戰答對題數前 20 名（僅保留個人最高成績）</p>
+                        <p class="text-xs text-slate-400 mt-1">呈現校內挑戰答對題數前 20 名（僅保留個人最高成績，且答對 0 題不列入）</p>
                     </div>
                     <button onclick="fetchLeaderboardData()" class="bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 font-bold py-2 px-3 rounded-lg border border-slate-700 transition flex items-center self-start md:self-auto">
                         <i class="fa-solid fa-arrows-rotate mr-1.5" id="refresh-icon"></i> 重新整理
@@ -815,7 +815,7 @@
         }
 
         // ----------------------------------------------------
-        // 英雄榜渲染 (前20名、同人取最高、姓名去識別化)
+        // 英雄榜渲染 (前20名、同人取最高、姓名去識別化，排除 0 分)
         // ----------------------------------------------------
         async function fetchLeaderboardData() {
             const refreshIcon = document.getElementById('refresh-icon');
@@ -854,19 +854,23 @@
                 return;
             }
 
-            // 同一學生篩選最高分 (Key: 年級 + 班級 + 姓名)
+            // 同一學生篩選最高分 (Key: 年級 + 班級 + 姓名)，且不列入 0 題的成績
             const highestScoresMap = {};
             records.forEach(rec => {
                 const key = `${rec.grade}_${rec.className}_${rec.name}`;
                 const scoreNum = parseInt(rec.score) || 0;
-                if (!highestScoresMap[key] || scoreNum > highestScoresMap[key].score) {
-                    highestScoresMap[key] = {
-                        grade: rec.grade,
-                        className: rec.className,
-                        name: rec.name,
-                        score: scoreNum,
-                        timestamp: rec.timestamp
-                    };
+                
+                // 核心防呆：只有當答對題數大於 0 時，才考慮列入英雄榜排行
+                if (scoreNum > 0) {
+                    if (!highestScoresMap[key] || scoreNum > highestScoresMap[key].score) {
+                        highestScoresMap[key] = {
+                            grade: rec.grade,
+                            className: rec.className,
+                            name: rec.name,
+                            score: scoreNum,
+                            timestamp: rec.timestamp
+                        };
+                    }
                 }
             });
 
@@ -883,7 +887,7 @@
             const top20 = list.slice(0, 20);
 
             if (top20.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-500">尚無有效成績登錄。</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-500">尚無大於 0 題的有效成績登錄。</td></tr>`;
                 return;
             }
 
@@ -1210,6 +1214,7 @@
             }
         }
 
+        // 備份題庫 JSON 檔
         function exportQuestions() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(questions, null, 2));
             const downloadAnchor = document.createElement('a');
