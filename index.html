@@ -349,7 +349,7 @@
                             <h3 class="text-lg font-bold text-white mb-2 flex items-center">
                                 <i class="fa-solid fa-key text-amber-500 mr-2"></i> 修改管理密碼
                             </h3>
-                            <p class="text-xs text-slate-400 mb-6">變更後，登入後台時需輸入最新密碼。（忘記密碼可用救援碼 <code>admin888</code>）</p>
+                            <p class="text-xs text-slate-400 mb-6">變更後，登入後台時需輸入最新密碼。請妥善保管您的密碼。</p>
 
                             <form onsubmit="handlePasswordChange(event)" class="space-y-4">
                                 <div>
@@ -366,7 +366,7 @@
                                 </div>
                                 <div class="pt-2 flex gap-3">
                                     <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-xs text-white font-bold py-2 px-5 rounded-lg transition">更新管理密碼</button>
-                                    <button type="button" onclick="resetPasswordToDefault()" class="text-slate-400 hover:text-slate-200 text-xs py-2 px-3 transition">重置為預設 (S2860885*110)</button>
+                                    <button type="button" onclick="resetPasswordToDefault()" class="text-slate-400 hover:text-slate-200 text-xs py-2 px-3 transition">重置為預設密碼</button>
                                 </div>
                             </form>
                         </div>
@@ -795,7 +795,7 @@
                 document.getElementById('admin-password').value = '';
                 showCustomAlert("登入成功！歡迎進入興嘉閱讀素養控制台。", "success");
             } else {
-                showCustomAlert("密碼錯誤！請重新輸入。(預設密碼為: xingjia)", "error");
+                showCustomAlert("密碼錯誤！請重新輸入。", "error");
             }
         }
 
@@ -861,9 +861,9 @@
         }
 
         function resetPasswordToDefault() {
-            if (confirm("您確定要將密碼重設為預設密碼「xingjia」嗎？")) {
+            if (confirm("您確定要將密碼重設為預設密碼嗎？")) {
                 localStorage.setItem('xingjia_admin_password', 'xingjia');
-                showCustomAlert("密碼已重設為預設值「xingjia」。", "success");
+                showCustomAlert("密碼已重設為預設值。", "success");
             }
         }
 
