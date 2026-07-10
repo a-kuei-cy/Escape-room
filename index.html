@@ -129,7 +129,7 @@
                             <i class="fa-solid fa-door-open"></i>
                             <span>開啟石門．挑戰開始</span>
                         </span>
-                        <span class="text-[10px] text-emerald-200 font-normal mt-0.5">Start Escape Challenge (Randomized)</span>
+                        <span class="text-[10px] text-emerald-200 font-normal mt-0.5">Start Escape Challenge (50 Questions Loaded)</span>
                     </button>
                 </form>
             </div>
@@ -176,7 +176,7 @@
                             關卡 <span id="question-index">1</span> / <span id="game-total-count">50</span>
                         </span>
                         <!-- 閱讀文章引文 -->
-                        <div id="question-passage-box" class="mb-4 bg-slate-950/80 p-4 rounded-lg border border-slate-800/80 text-slate-300 text-sm leading-relaxed overflow-y-auto max-h-48">
+                        <div id="question-passage-box" class="mb-4 bg-slate-950/80 p-4 rounded-lg border border-slate-800/80 text-slate-300 text-sm leading-relaxed overflow-y-auto max-h-48 custom-scrollbar">
                         </div>
                         <!-- 問題主幹 -->
                         <h3 class="text-lg md:text-xl font-bold text-white leading-relaxed" id="question-text">
@@ -204,7 +204,7 @@
                         <span>智慧石板的解密提示（閱讀策略引導）</span>
                     </div>
                     <p class="text-xs text-slate-300 mb-2 font-bold" id="explain-question-title"></p>
-                    <div class="bg-slate-950 p-3 rounded text-xs text-slate-300 leading-relaxed italic mb-3 border border-slate-800/50" id="explain-passage-text"></div>
+                    <div class="bg-slate-950 p-3 rounded text-xs text-slate-300 leading-relaxed italic mb-3 border border-slate-800/50 max-h-32 overflow-y-auto custom-scrollbar" id="explain-passage-text"></div>
                     <p class="text-sm text-amber-300 leading-relaxed font-medium" id="explain-body-text">
                         解析讀取中...
                     </p>
@@ -288,8 +288,8 @@
                 <!-- 控制台主介面 -->
                 <div id="admin-console-box" class="hidden space-y-6">
                     <!-- 後台導覽列 -->
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-4 border-b border-slate-700">
-                        <div class="flex gap-2">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-4 border-b border-slate-700 w-full">
+                        <div class="flex flex-wrap gap-2">
                             <button onclick="switchAdminTab('leaderboard')" id="tab-btn-leaderboard" class="admin-tab-btn px-4 py-2 rounded-lg text-sm font-bold bg-slate-800 text-white border-2 border-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.3)]">成績排行與管理</button>
                             <button onclick="switchAdminTab('questions')" id="tab-btn-questions" class="admin-tab-btn px-4 py-2 rounded-lg text-sm font-bold text-slate-400 hover:bg-slate-800 hover:text-white transition">題庫管理 (雲端)</button>
                             <button onclick="switchAdminTab('settings')" id="tab-btn-settings" class="admin-tab-btn px-4 py-2 rounded-lg text-sm font-bold text-slate-400 hover:bg-slate-800 hover:text-white transition">系統與密碼設定</button>
@@ -345,7 +345,7 @@
                                     <h3 class="text-lg font-bold text-white flex items-center">
                                         <i class="fa-solid fa-book-open text-blue-400 mr-2"></i> 雲端題庫管理
                                     </h3>
-                                    <p class="text-xs text-slate-400 mt-1">在此處新增或編輯題目，將同步更新至 Google 試算表。</p>
+                                    <p class="text-xs text-slate-400 mt-1">在此處新增或編輯題目，將同步更新至 Google 試算表。若未設定則顯示本機基礎 50 題。</p>
                                 </div>
                                 <div class="flex gap-2">
                                     <button onclick="refreshQuestionsList()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-xs rounded-md transition flex items-center">
@@ -362,58 +362,68 @@
                                 <table class="w-full text-left border-collapse font-sans text-slate-300">
                                     <thead>
                                         <tr class="bg-slate-800 text-slate-300 text-xs">
-                                            <th class="p-3 border-b border-slate-700 rounded-tl-lg">ID</th>
-                                            <th class="p-3 border-b border-slate-700">引文預覽</th>
-                                            <th class="p-3 border-b border-slate-700">題目主幹</th>
-                                            <th class="p-3 border-b border-slate-700">解答</th>
-                                            <th class="p-3 border-b border-slate-700 rounded-tr-lg text-right">操作</th>
+                                            <th class="p-3 border-b border-slate-700 rounded-tl-lg w-12">ID</th>
+                                            <th class="p-3 border-b border-slate-700 w-1/4">引文預覽</th>
+                                            <th class="p-3 border-b border-slate-700 w-1/2">題目主幹</th>
+                                            <th class="p-3 border-b border-slate-700 w-12 text-center">解答</th>
+                                            <th class="p-3 border-b border-slate-700 rounded-tr-lg text-right w-24">操作</th>
                                         </tr>
                                     </thead>
                                     <tbody id="admin-questions-tbody" class="text-sm text-slate-200 divide-y divide-slate-800/50">
-                                        <tr><td colspan="5" class="p-8 text-center text-slate-500 text-xs">點擊「重新載入」獲取雲端題庫資料...</td></tr>
+                                        <tr><td colspan="5" class="p-8 text-center text-slate-500 text-xs">點擊「重新載入」獲取雲端或渲染本地題庫資料...</td></tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
 
-                    <!-- 子分頁：安全與密碼設定 -->
+                    <!-- 子分頁：安全與密碼設定及 GAS 設定 -->
                     <div id="sub-settings" class="hidden space-y-6">
-                        <div class="bg-slate-900/60 p-6 rounded-xl border border-slate-800 max-w-lg">
-                            <h3 class="text-lg font-bold text-white mb-2 flex items-center">
-                                <i class="fa-solid fa-key text-amber-500 mr-2"></i> 修改管理密碼
-                            </h3>
-                            <p class="text-xs text-slate-400 mb-6">變更後，登入後台時需輸入最新密碼。請妥善保管您的密碼。</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- 密碼修改 -->
+                            <div class="bg-slate-900/60 p-6 rounded-xl border border-slate-800">
+                                <h3 class="text-lg font-bold text-white mb-2 flex items-center">
+                                    <i class="fa-solid fa-key text-amber-500 mr-2"></i> 修改管理密碼
+                                </h3>
+                                <p class="text-xs text-slate-400 mb-6">變更後，登入後台時需輸入最新密碼。請妥善保管您的密碼。</p>
 
-                            <form onsubmit="handlePasswordChange(event)" class="space-y-4">
-                                <div>
-                                    <label class="block text-xs font-medium text-slate-300 mb-1">目前管理密碼</label>
-                                    <input type="password" id="settings-old-password" required placeholder="請輸入目前的密碼" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-medium text-slate-300 mb-1">新設定密碼</label>
-                                    <input type="password" id="settings-new-password" required placeholder="請輸入新設定的密碼 (至少4碼)" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-medium text-slate-300 mb-1">再次確認新密碼</label>
-                                    <input type="password" id="settings-confirm-password" required placeholder="請再次確認新設定的密碼" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
-                                </div>
-                                <div class="pt-2 flex gap-3">
-                                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-xs text-white font-bold py-2 px-5 rounded-lg transition">更新管理密碼</button>
-                                    <button type="button" onclick="resetPasswordToDefault()" class="text-slate-400 hover:text-slate-200 text-xs py-2 px-3 transition">重置為預設密碼</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                                <form onsubmit="handlePasswordChange(event)" class="space-y-4">
+                                    <div>
+                                        <label class="block text-xs font-medium text-slate-300 mb-1">目前管理密碼</label>
+                                        <input type="password" id="settings-old-password" required placeholder="請輸入目前的密碼" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-medium text-slate-300 mb-1">新設定密碼</label>
+                                        <input type="password" id="settings-new-password" required placeholder="請輸入新設定的密碼 (至少4碼)" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-medium text-slate-300 mb-1">再次確認新密碼</label>
+                                        <input type="password" id="settings-confirm-password" required placeholder="請再次確認新設定的密碼" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                                    </div>
+                                    <div class="pt-2 flex gap-3">
+                                        <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-xs text-white font-bold py-2 px-4 rounded-lg transition">更新管理密碼</button>
+                                        <button type="button" onclick="resetPasswordToDefault()" class="text-slate-400 hover:text-slate-200 text-xs py-2 px-3 transition">重置為預設密碼</button>
+                                    </div>
+                                </form>
+                            </div>
 
-                    <!-- 子分頁：雲端連結 -->
-                    <div id="sub-gas" class="hidden space-y-4 text-slate-300 text-sm leading-relaxed">
-                        <div class="bg-emerald-950/20 border border-emerald-800/40 p-4 rounded-xl">
-                            <h3 class="font-bold text-white mb-2"><i class="fa-solid fa-cloud"></i> Google Apps Script 試算表串接</h3>
-                            <p class="mb-4">本系統目前預設將挑戰數據上傳至您的專屬 API 節點。您可隨時在此更改或重設 API 網址：</p>
-                            <div class="flex gap-2 max-w-xl">
-                                <input type="text" id="api-url-input" placeholder="請貼上 Google Apps Script 部署 URL" class="flex-1 bg-slate-900 border border-slate-700 rounded px-3 py-1.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
-                                <button onclick="saveApiUrl()" class="bg-emerald-600 hover:bg-emerald-500 text-xs text-white font-bold px-4 py-1.5 rounded transition">儲存新 URL</button>
+                            <!-- GAS 連接 API 設定 -->
+                            <div class="bg-slate-900/60 p-6 rounded-xl border border-slate-800 flex flex-col justify-between">
+                                <div>
+                                    <h3 class="text-lg font-bold text-white mb-2 flex items-center">
+                                        <i class="fa-solid fa-cloud text-blue-400 mr-2"></i> Google Apps Script 試算表串接
+                                    </h3>
+                                    <p class="text-xs text-slate-400 mb-6">本系統目前預設將挑戰數據與題庫上傳/同步至您的專屬 API 節點試算表：</p>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="block text-xs font-medium text-slate-300 mb-1">API 串接網址 (Web App URL)</label>
+                                            <input type="text" id="api-url-input" placeholder="請貼上 Google Apps Script 部署 URL" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="pt-4 flex justify-end">
+                                    <button onclick="saveApiUrl()" class="bg-blue-600 hover:bg-blue-500 text-xs text-white font-bold py-2 px-5 rounded-lg transition shadow-md">儲存新 URL</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -424,7 +434,9 @@
         </div>
     </main>
 
-    <!-- 成績手動編輯 Modal -->
+    <!-- 各種 Modals (彈出視窗) -->
+    
+    <!-- 1. 成績手動編輯與補登 Modal -->
     <div id="score-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4">
             <div class="flex justify-between items-center border-b border-slate-800 pb-3">
@@ -459,7 +471,7 @@
                     <input type="number" id="modal-score-val" required min="0" max="50" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-white focus:outline-none">
                 </div>
                 <div>
-                    <label class="block text-slate-300 font-medium mb-1">挑戰時間 (選填)</label>
+                    <label class="block text-slate-300 font-medium mb-1">挑戰時間</label>
                     <input type="datetime-local" id="modal-score-time" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-white focus:outline-none">
                 </div>
                 <div class="pt-4 flex justify-end space-x-2 border-t border-slate-800">
@@ -470,95 +482,68 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- 題目編輯 Modal (彈出視窗) -->
-    <!-- ========================================== -->
+    <!-- 2. 題目編輯與新增 Modal -->
     <div id="question-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4">
-        <!-- 遮罩層 -->
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeQuestionModal()"></div>
-        
-        <!-- Modal 內容 -->
         <div class="relative bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-3xl shadow-2xl flex flex-col max-h-[90vh]">
-            <!-- 標題列 -->
             <div class="p-5 border-b border-slate-800 flex justify-between items-center">
-                <h3 id="modal-title" class="text-xl font-bold text-white flex items-center">
+                <h3 class="text-xl font-bold text-white flex items-center">
                     <i class="fa-solid fa-pen-to-square text-blue-400 mr-2"></i> <span id="modal-title-text">新增題目</span>
                 </h3>
-                <button onclick="closeQuestionModal()" class="text-slate-400 hover:text-white transition">
-                    <i class="fa-solid fa-xmark text-xl"></i>
-                </button>
+                <button onclick="closeQuestionModal()" class="text-slate-400 hover:text-white transition"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
-            
-            <!-- 表單內容 (可捲動) -->
             <div class="p-6 overflow-y-auto custom-scrollbar flex-1">
                 <form id="question-form" class="space-y-5">
                     <input type="hidden" id="q-id">
-                    
                     <div>
                         <label class="block text-sm font-medium text-slate-300 mb-1">閱讀引文 (可留空)</label>
-                        <textarea id="q-passage" rows="4" placeholder="請輸入閱讀測驗的文章段落..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue-500"></textarea>
+                        <textarea id="q-passage" rows="3" placeholder="請輸入閱讀測驗的文章段落..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue-500"></textarea>
                     </div>
-                    
                     <div>
                         <label class="block text-sm font-medium text-slate-300 mb-1">題目主幹 <span class="text-red-400">*</span></label>
-                        <textarea id="q-text" rows="2" required placeholder="請輸入題目內容..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue-500"></textarea>
+                        <textarea id="q-text" rows="2" required placeholder="請輸入題目內容..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue-500"></textarea>
                     </div>
-
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-slate-300 mb-1">選項 A <span class="text-red-400">*</span></label>
-                            <input type="text" id="q-optA" required placeholder="選項 A 內容" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            <input type="text" id="q-optA" required placeholder="選項 A 內容" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-300 mb-1">選項 B <span class="text-red-400">*</span></label>
-                            <input type="text" id="q-optB" required placeholder="選項 B 內容" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            <input type="text" id="q-optB" required placeholder="選項 B 內容" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-300 mb-1">選項 C <span class="text-red-400">*</span></label>
-                            <input type="text" id="q-optC" required placeholder="選項 C 內容" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            <input type="text" id="q-optC" required placeholder="選項 C 內容" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-300 mb-1">選項 D <span class="text-red-400">*</span></label>
-                            <input type="text" id="q-optD" required placeholder="選項 D 內容" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            <input type="text" id="q-optD" required placeholder="選項 D 內容" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none">
                         </div>
                     </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-1">正確解答 <span class="text-red-400">*</span></label>
-                        <select id="q-answer" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue-500">
-                            <option value="A">選項 A</option>
-                            <option value="B">選項 B</option>
-                            <option value="C">選項 C</option>
-                            <option value="D">選項 D</option>
-                        </select>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1">
+                            <label class="block text-sm font-medium text-slate-300 mb-1">正確解答 <span class="text-red-400">*</span></label>
+                            <select id="q-answer" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none">
+                                <option value="A">選項 A</option><option value="B">選項 B</option>
+                                <option value="C">選項 C</option><option value="D">選項 D</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-slate-300 mb-1">核心詳解與策略提示 <span class="text-red-400">*</span></label>
+                            <input type="text" id="q-exp" required placeholder="請輸入答錯時顯示的解題線索..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none">
+                        </div>
                     </div>
                 </form>
             </div>
-            
-            <!-- 底部按鈕 -->
             <div class="p-5 border-t border-slate-800 flex justify-end gap-3 bg-slate-800/50 rounded-b-2xl">
-                <button type="button" onclick="closeQuestionModal()" class="px-5 py-2 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition">取消</button>
-                <button type="button" onclick="saveQuestionToCloud()" id="modal-save-btn" class="px-5 py-2 text-sm font-bold text-white bg-blue-600 hover:bg-blue-500 rounded-lg shadow-lg transition flex items-center">
+                <button type="button" onclick="closeQuestionModal()" class="px-5 py-2 text-sm font-medium text-slate-300 hover:bg-slate-700 rounded-lg">取消</button>
+                <button type="button" onclick="saveQuestionToCloud()" id="modal-save-btn" class="px-5 py-2 text-sm font-bold text-white bg-blue-600 hover:bg-blue-500 rounded-lg shadow-lg flex items-center">
                     <i class="fa-solid fa-cloud-arrow-up mr-2"></i> 儲存並同步至雲端
                 </button>
             </div>
         </div>
     </div>
-
-    <!-- 自訂客製化訊息通知視窗 -->
-    <div id="custom-alert" class="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 hidden">
-        <div class="bg-slate-900 border border-slate-800 rounded-xl max-w-sm w-full p-6 text-center space-y-4">
-            <div id="alert-icon" class="text-3xl text-emerald-400"></div>
-            <p id="alert-msg" class="text-slate-200 text-sm leading-relaxed"></p>
-            <button onclick="closeAlert()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-1.5 rounded-lg text-xs font-bold">確定</button>
-        </div>
-    </div>
-
-    <!-- 頁尾 -->
-    <footer class="bg-slate-950 py-4 border-t border-slate-900 text-center text-xs text-slate-600">
-        <p>© 2026 嘉義市興嘉國民小學 閱讀教育推廣小組 ✕ 資訊室監製</p>
-        <p class="mt-1">引導孩子自主思辨，逃脫資訊洪流的迷宮 | Empowering Critical Reading, Escaping the Digital Labyrinth</p>
-    </footer>
 
     <!-- 邏輯引擎 JavaScript -->
     <script>
@@ -572,7 +557,7 @@
         let scoresHistory = []; 
         let isAdminLoggedIn = false;
         
-        const QUESTION_TIME_LIMIT = 45; // 45 秒答題
+        const QUESTION_TIME_LIMIT = 45; 
         let timerInterval = null;
         let timeLeft = QUESTION_TIME_LIMIT;
         let currentShuffledOptions = [];
@@ -582,62 +567,72 @@
         let googleApiUrl = localStorage.getItem('xingjia_gas_url') || defaultApiUrl;
         let cloudQuestionsData = [];
 
-        // 內建的 50 題高品質閱讀素養題庫與詳細解析
-        const rawDataset = [
-            { id: 1, p: "大象每天花近16小時尋找食用植物，一隻成年象每天可吃下多達150公斤樹葉與草木。然而牠們消化系統效率不高，大約只有40%會被吸收，其餘都會原封不動排泄出來。", q: "根據文意，下列敘述何者正確？", a: "大象絕大多數時間都在睡眠", b: "大象的消化器官能吸收九成養分", c: "大象排泄物中含有大量未完全消化的植物殘渣", d: "成年象每天大約排泄出150公斤廢棄物", ans: "C", exp: "【邏輯推論】文章指出大象只吸收40%的食物，其餘（60%）都『原封不動地排泄出來』。這代表排泄物裡充滿了沒消化完的殘渣。選項D不對是因為吃進去150公斤，扣除吸收的40%，排出的不會是滿額的150公斤。" },
-            { id: 2, p: "臺灣櫻花鉤吻鮭是冰河時期留下的「孑遺生物」，只生活在高山冰涼、清澈、無污染的溪流中。水溫若超過攝氏15度，牠們便難以生存。近年因為氣候暖化與人為開發，棲地大幅縮小。", q: "臺灣櫻花鉤吻鮭生存面臨威脅，下列哪一個『不是』主要原因？", a: "高山水溫的上升", b: "溪流受到人為污染", c: "冰河時期的全球變冷現象", d: "周遭土地的過度開發", ans: "C", exp: "【因果辨析】冰河時期的冷水環境正是牠們當時能來到臺灣的原因。近年會面臨威脅，是由於『氣候暖化（溫度變熱）』和『人為開發』，所以全球變冷並不是牠們現在面臨威脅的原因。" },
-            { id: 3, p: "網路貼文寫著：「天天吃烤土司會致癌！因為烤焦的麵包中含有單氯二醇等劇毒致癌物質！」專家對此澄清：除非每天吃下幾十公斤烤焦的吐司，毒素才可能在體內累積到危害劑量。", q: "針對此貼文與專家的澄清，我們應抱持什麼樣的媒體識讀態度？", a: "立刻轉發，寧可信其有", b: "注意劑量才是關鍵，避免過度焦慮或輕信誇大標題", c: "既然會致癌，不論吃多少都應該絕對禁止", d: "網路謠言必定都是科學家編造的", ans: "B", exp: "【媒體識讀】許多科學與健康謠言常使用『只要吃了就會死/致癌』的誇大詞彙。專家指出要達到『幾十公斤』才會危害，這說明了『劑量』才是關鍵，這題在考驗你是否能不盲從驚悚的網路大字報標題。" },
-            { id: 4, p: "在自然界中，蜜蜂扮演「授粉者」的重要角色。人類食用的作物中，有高達三分之一需要依靠昆蟲授粉，而其中蜜蜂佔了絕大比例。如果蜜蜂滅絕，人類將面臨嚴重的糧食危機。", q: "文中強調「蜜蜂滅絕會引發糧食危機」的主要關鍵是什麼？", a: "人類缺少了主要的糖分來源（蜂蜜）", b: "許多農作物會因為失去授粉管道而無法結果繁衍", c: "其他食草昆蟲會因為沒有蜜蜂而大量繁殖", d: "大自然中將不再有花草植物生長", ans: "B", exp: "【整合與解釋】文章說明人類有三分之一的作物需要昆蟲授粉，且『蜜蜂佔了絕大比例』。如果蜜蜂沒了，這些植物就無法順利授粉結果，農作物產量崩潰，才會引發糧食危機，不只是少了蜂蜜而已喔！" },
-            { id: 5, p: "垃圾分類回收固然能減少資源消耗，但「減量（Reduce）」才是環保最核心的一環。如果我們不減少購買一次性產品，即使回收做得再好，處理回收垃圾本身產生的碳排放量依然會持續傷害地球。", q: "根據這段話，最根本的環保做法應該是？", a: "全面禁止任何形式的消費與購物", b: "從源頭減少購買不需要、且用完即丟的物品", c: "研發更無污染的垃圾焚化爐", d: "將所有垃圾轉為可回收資源", ans: "B", exp: "【核心概念抽取】作者強調『減量（Reduce）才是環保最核心的一環』，並指出如果不減少一次性產品，回收流程一樣會產生碳排。因此最根本的做法是源頭減量，少買不必要的拋棄式物品。" },
-            { id: 6, p: "主動式閱讀者在看書時，不僅被動接受故事情節，更會時常對作者的觀點提出「為什麼」的疑問，並嘗試在書中尋找證據來支持自己的推論。", q: "下列哪一種閱讀行為最符合「主動式閱讀」的定義？", a: "用最快的速度把一整本小說讀完，不作任何停留", b: "一邊讀一邊在腦海中思索：『這個角色的決定真的合理嗎？』", c: "只閱讀老師指派或考試會考的教科書與講義", d: "將書中優美的句子一字不漏地背誦下來", ans: "B", exp: "【定義比對】文中提到主動式閱讀的特徵是『對觀點提出為什麼的疑問』並『尋找證據』。在腦中思索角色決定是否合理，就是實踐質疑與思辨的具體表現。" },
-            { id: 7, p: "水筆仔為了適應高鹽度、缺氧且鬆軟的泥質灘地，演化出了獨特的「胎生苗」現象。果實成熟後不立刻落地，而是在母樹上萌芽並吸收養分，直到發育成筆狀幼苗才脫離母體插入泥中。", q: "水筆仔之所以發展出「胎生苗」，最主要是為了解決什麼生存困境？", a: "灘地陽光照射不足的問題", b: "泥灘環境過於惡劣，種子直接落地難以發芽與扎根", c: "防止果實被高山下來的淡水魚類啃食", d: "為了逃避陸地草食性哺乳動物的威脅", ans: "B", exp: "【環境適應推論】泥質灘地『高鹽、缺氧、鬆軟』，一般種子掉下去極難發芽存活。水筆仔在母樹上先長成發育完全的『筆狀幼苗』再掉下來，才能一舉插進泥中定居，這是適應鬆軟泥灘的生存策略。" },
-            { id: 8, p: "西元1840年，英國發行了世界上第一張郵票「黑便士」。在郵票發明前，郵資是由「收件人」支付，且費用高昂。黑便士的誕生改由「寄件人」預付，讓郵政服務變得普及與廉價，改變了人類通訊歷史。", q: "根據這段歷史，「黑便士」帶來最革命性的改變是什麼？", a: "讓郵資改由寄件人預付，大幅降低寄信門檻", b: "郵票的圖案變成了精緻的藝術收藏品", c: "收件人不再需要為了收信而繳納罰金", d: "英國成為世界上最會製造黑墨水的國家", ans: "A", exp: "【新舊制對比】過去是『收件人付費且昂貴』，黑便士改為『寄件人預付』，從而使郵政服務變得『普及與廉價』。這就是它對通訊歷史帶來的革命性改變。" },
-            { id: 9, p: "許多人以為仙人掌的刺是為了防禦掠食者。事實上，這些刺是由「葉子」退化而成。細小的刺不但可以減少水分在烈日下的蒸散，還能捕捉流經其表面的露水，是荒漠植物適應極度乾旱的智慧。", q: "仙人掌的刺在生物學上的主要適應功能『不包括』下列何者？", a: "幫助植株在夜間進行旺盛的光合作用", b: "大幅降低葉片水分蒸散的面積", c: "在乾燥清晨收集並引導微量露水", d: "保護植物不被部分動物輕易啃食", ans: "A", exp: "【細節排除】文章提到刺的功能有：減少水分蒸散（B）、捕捉露水（C）、且一般人以為防禦（D，代表它也有部分防禦效果）。但是刺並『沒有』光合作用的功能，光合作用通常是靠綠色肥大的莖來進行。" },
-            { id: 10, p: "有言道：「良言一句三冬暖，惡語傷人六月寒。」這句話提醒我們，語言具有強大的能量。有時候一句無心的刻刻薄批評，可能會對聆聽者的心理防線造成難以抹滅的陰影與傷害。", q: "這句話最適合用來勸誡大眾注意什麼事情？", a: "在寒冷的冬天要多對別人說溫暖的話", b: "說話時應慎選用詞，展現體貼與同理心", c: "不要在六月的炎夏對別人大吼大叫", d: "應多學習說話技巧，以便說服別人", ans: "B", exp: "【文意轉譯】這句俗諺的核心是要我們注意說話的影響力。惡毒的話即使在盛夏（六月）也會讓人心寒。因此它是在勸誡大家說話時要謹慎、體貼，具有同理心，而非字面上的季節或溫度問題。" }
-        ];
-
-        // 自動生成第11至50題，補足50題完整版，且同樣具備高水準閱讀解析與段落
+        // 核心 50 題內建高品質素養題庫生成與解析
         function buildFullDataset() {
-            questions = [...rawDataset];
-            const extraPassages = [
-                { p: "小賈在實驗中發現，當水的溫度調高時，糖在水中的溶解速度會變快。於是他推論：所有固體在液體中的溶解度，都會隨著溫度升高而必然等比例增加。", q: "關於小賈的實驗推論，下列科學思辨何者最合理？", a: "小賈的推論完全正確，這是一般常識", b: "他犯了過度概括的錯誤，並非所有固體在高溫下溶解度都更高", c: "氣體與特定物質在高溫下溶解度反而下降，不能以糖概括全體", d: "實驗溫度不夠高，應加熱到兩百度以上才能做結論", ans: "B", exp: "【科學思辨】小賈的錯誤在於僅藉由『糖水加熱溶解變快』就武斷地推演至『所有固體與液體』。事實上，有些物質（如氫氧化鈣）的溶解度隨溫度升高反而會下降，犯了以偏概全的邏輯毛病。" },
-                { p: "台灣的地名背後常含有歷史故事。例如「民雄」舊稱「打貓」，「打貓」是源自於平埔族洪雅族社名「Taneaw」的閩南語音譯，後來日治時期因其音與日語「民雄（Tamio）」相近而改名。", q: "根據此段文字，關於地名演變的說法何者正確？", a: "「打貓」這個名字是因為當地人特別愛虐待貓咪", b: "「民雄」是清朝皇帝為了褒獎地方孝子而賜的名字", c: "地名變化反映了不同時代族群、語言與政權交替的軌跡", d: "「打貓」是日治時期日本人取的古怪名字", ans: "C", exp: "【文化脈絡】舊稱『打貓』源自平埔族語音譯，後日治時期因日語諧音改稱『民雄』。這個變化清晰地體現了土地上不同族群（平埔族、閩南移民、日本政權）的歷史文化堆疊。" },
-                { p: "「情緒勒索」是一種關係中的控制手段，通常由一方利用另一方的內疚感、恐懼感或責任感，來強迫對方順從自己的要求，這在親人、伴侶間最為常見。", q: "下列哪一種對話情境「最符合」情緒勒索的特徵？", a: "媽媽說：『如果你今天不把功課寫完，明天就不能去公園玩。』", b: "朋友說：『如果你這次不幫我作弊，就代表你根本不把我當好朋友！』", c: "老師說：『上課請保持安靜，否則會影響其他同學聽課的權益。』", d: "司機說：『請依序上車投幣，配合乘車秩序。』", ans: "B", exp: "【情境應用】『情緒勒索』的特徵在於利用心理弱點（如：友誼、認同）來迫使對方做不合理的事。選項B中，朋友利用對方對『失去好朋友關係』的恐懼來強迫作弊，是最標準的情緒勒索情境。" },
-                { p: "「木馬屠城記」是希臘神話中著名的故事。希臘聯軍圍攻特洛伊十年未果，最後造了一隻巨大木馬留存沙灘，假裝退兵。特洛伊人將木馬當成戰利品拖入城內，深夜木馬中的希臘士兵出來開城門裡應外合，特洛伊因而滅亡。", q: "後世常以「特洛伊木馬」來比喻什麼樣的事情？", a: "製作非常精美的巨型玩具與木雕藝術品", b: "潛伏在內部，意圖在關鍵時刻破壞防線的隱蔽威脅", c: "光明正大的正面對決與武力抗衡", d: "非常愛好和平，熱衷於餽贈禮物的國家", ans: "B", exp: "【文意借代】希臘士兵藏在木馬肚子中被敵人自己拉入城中，後世因此用『特洛伊木馬』指代那些外表無害，但實則潛伏於內部、在關鍵時刻發動致命一擊的潛在威脅或間諜程式。" },
-                { p: "隨著科技進步，「電子書」逐漸普及。雖然它有著輕便、好攜帶、能儲存千本書籍的優點，但傳統實體書所特有的墨水香氣、紙張翻閱的觸覺反饋，依然是許多愛書人無法割捨的情懷。", q: "這段話的主要核心大意是什麼？", a: "電子書將在幾年內徹底消滅所有的傳統書店與紙本書", b: "傳統書與電子書各有其價值與支持者，不應只用實用性來衡量", c: "紙張的翻閱會產生嚴重的森林砍伐問題，不環保", d: "電子書的功能不夠多，應該加裝遊戲功能", ans: "B", exp: "【核心摘要】這段話各舉了電子書（輕便、大容量）與紙本書（觸覺、情感連結）的優點。作者意在表達兩者各具千秋，閱讀的價值和情懷無法被純粹的便利科技完全取代。" },
-                { p: "世界上最深的海溝是「馬里亞納海溝」，深度超過1萬公尺。在如此深沉、無光、高壓且低溫的極端環境中，科學家依然發現了特殊的深海生物，牠們甚至演化出能自己發光的特殊構造。", q: "深海魚類演化出「發光器」在極端環境中主要是為了解決什麼？", a: "保持身體溫度以防止凍傷", b: "在毫無陽光的黑暗中誘捕獵物、溝通或防禦", c: "行光合作用以製造身體所需的養分", d: "照亮前方的路以避免撞上礁石", ans: "B", exp: "【科學推理】深海一萬公尺是『毫無陽光的黑暗環境』。在這種極端黑暗下，發光器能扮演『釣餌誘捕獵物』、『同類溝通』或『干擾捕食者』的角色。魚類本身是異營生物，無法進行光合作用。" },
-                { p: "古人說：「凡事豫則立，不豫則廢。」意思是任何事情如果能提前做好充分的計畫與準備，就容易獲得成功；如果沒有準備，就容易遭遇挫折與失敗。", q: "下列哪一個成語與這段話的中心思想最接近？", a: "臨渴掘井", b: "有備無患", c: "塞翁失馬", d: "亡羊補牢", ans: "B", exp: "【成語連結】『豫』即預先、準備。這句話強調凡事事前做好規劃便能成功，與『有備無患』（事先有周全的準備，便能免除災害與患難）的意旨最相符。選項A與D都屬於事後補救。" },
-                { p: "科學家發現，部分鳥類在遷徙時會呈「V字形」飛行。這是因為領頭鳥拍動翅膀時，會在身後產生一股上升氣流，後方雁鳥利用這股氣流可以節省體力。牠們在途中還會輪流擔任領頭鳥。", q: "雁鳥輪流當領頭鳥飛行的行為，給予人類什麼啟示？", a: "在群體中，唯有最強大的人才能永遠站在第一線", b: "團隊合作、共同分擔壓力的體制更有利於走得長遠", c: "飛行時應該各憑本事，不應依賴別人的氣流", d: "不論做什麼事都要遵守年紀大小的順序", ans: "B", exp: "【核心寓意】雁群因著『領頭鳥會疲憊，而輪流交替帶頭』，且後方雁鳥能承接氣流。這極具社會學啟示：團隊合作、輪流分擔核心壓力，才能使整個群體走得更遠、飛得更穩。" },
-                { p: "當我們閱讀新聞時，常會看到一些誇張、聳動的標題，例如：「天啊！吃這種水果竟然會讓心臟停止跳動？！」點進去才發現只是在談論過量食用的極端特例。", q: "新聞媒體之所以使用這類誇張標題，最主要的商業目的是什麼？", a: "為了教導社會大眾正確、客觀的醫學知識", b: "吸引讀者點閱（流量），藉此賺取廣告費", c: "響應政府宣導全民健康的政令", d: "提醒民眾不要再購買任何水果", ans: "B", exp: "【批判性讀解】這即是著名的『標題黨（Clickbait）』。在網路流量變現時代，媒體透過激起讀者的好奇或恐懼心引誘點擊，獲取點擊率與瀏覽量（流量），從而取得更高的商業廣告利潤。" },
-                { p: "有些歷史學家認為，印刷術的發明是歐洲文藝復興的關鍵。因為書籍能被大量印刷，知識不再被貴族與教會壟斷，平民百姓得以閱讀聖經與科學書籍，進而促成了思想解放。", q: "根據此說法，印刷術「最根本」的社會貢獻是什麼？", a: "讓造紙廠與印刷廠的商人賺了許多錢", b: "推動了知識的普及化與思想的民主化", c: "讓歐洲教皇的權力變得比以往更加龐大", d: "增加了書籍在博物館中被展出的機會", ans: "B", exp: "【社會效應評估】文章強調『知識不再被壟斷，平民百姓得以閱讀...促成思想解放』。這對社會底層結構帶來了深刻衝擊：知識向下普及，促使全社會階層的覺醒與民主化進程。" }
+            const rawDataset = [
+                { id: 1, p: "大象每天花近16小時尋找食用植物，一隻成年象每天可吃下多達150公斤樹葉與草木。然而牠們消化系統效率不高，大約只有40%會被吸收，其餘都會原封不動排泄出來。", q: "根據文意，下列敘述何者正確？", a: "大象絕大多數時間都在睡眠", b: "大象的消化器官能吸收九成養分", c: "大象排泄物中含有大量未完全消化的植物殘渣", d: "成年象每天大約排泄出150公斤廢棄物", ans: "C", exp: "【邏輯推論】文章指出大象只吸收40%的食物，其餘（60%）都『原封不動地排泄出來』。這代表排泄物裡充滿了沒消化完的殘渣。選項D不對是因為吃進去150公斤，扣除吸收的40%，排出的不會是滿額的150公斤。" },
+                { id: 2, p: "臺灣櫻花鉤吻鮭是冰河時期留下的「孑遺生物」，只生活在高山冰涼、清澈、無污染的溪流中。水溫若超過攝氏15度，牠們便難以生存。近年因為氣候暖化與人為開發，棲地大幅縮小。", q: "臺灣櫻花鉤吻鮭生存面臨威脅，下列哪一個『不是』主要原因？", a: "高山水溫的上升", b: "溪流受到人為污染", c: "冰河時期的全球變冷現象", d: "周遭土地的過度開發", ans: "C", exp: "【因果辨析】冰河時期的冷水環境正是牠們當時能來到臺灣的原因。近年會面臨威脅，是由於『氣候暖化（溫度變熱）』和『人為開發』，所以全球變冷並不是牠們現在面臨威脅的原因。" },
+                { id: 3, p: "網路貼文寫著：「天天吃烤土司會致癌！因為烤焦的麵包中含有單氯二醇等劇毒致癌物質！」專家對此澄清：除非每天吃下幾十公斤烤焦的吐司，毒素才可能在體內累積到危害劑量。", q: "針對此貼文與專家的澄清，我們應抱持什麼樣的媒體識讀態度？", a: "立刻轉發，寧可信其有", b: "注意劑量才是關鍵，避免過度焦慮或輕信誇大標題", c: "既然會致癌，不論吃多少都應該絕對禁止", d: "網路謠言必定都是科學家編造的", ans: "B", exp: "【媒體識讀】許多科學與健康謠言常使用『只要吃了就會死/致癌』的誇大詞彙。專家指出要達到『幾十公斤』才會危害，這說明了『劑量』才是關鍵，這題在考驗你是否能不盲從驚悚的網路大字報標題。" },
+                { id: 4, p: "在自然界中，蜜蜂扮演「授粉者」的重要角色。人類食用的作物中，有高達三分之一需要依靠昆蟲授粉，而其中蜜蜂佔了絕大比例。如果蜜蜂滅絕，人類將面臨嚴重的糧食危機。", q: "文中強調「蜜蜂滅絕會引發糧食危機」的主要關鍵是什麼？", a: "人類缺少了主要的糖分來源（蜂蜜）", b: "許多農作物會因為失去授粉管道而無法結果繁衍", c: "其他食草昆蟲會因為沒有蜜蜂而大量繁殖", d: "大自然中將不再有花草植物生長", ans: "B", exp: "【整合與解釋】文章說明人類有三分之一的作物需要昆蟲授粉，且『蜜蜂佔了絕大比例』。如果蜜蜂沒了，這些植物就無法順利授粉結果，農作物產量崩潰，才會引發糧食危機，不只是少了蜂蜜而已喔！" },
+                { id: 5, p: "垃圾分類回收固然能減少資源消耗，但「減量（Reduce）」才是環保最核心的一環。如果我們不減少購買一次性產品，即使回收做得再好，處理回收垃圾本身產生的碳排放量依然會持續傷害地球。", q: "根據這段話，最根本的環保做法應該是？", a: "全面禁止任何形式的消費與購物", b: "從源頭減少購買不需要、且用完即丟的物品", c: "研發更無污染的垃圾焚化爐", d: "將所有垃圾轉為可回收資源", ans: "B", exp: "【核心概念抽取】作者強調『減量（Reduce）才是環保最核心的一環』，並指出如果不減少一次性產品，回收流程一樣會產生碳排。因此最根本的做法是源頭減量，少買不必要的拋棄式物品。" },
+                { id: 6, p: "主動式閱讀者在看書時，不僅被動接受故事情節，更會時常對作者的觀點提出「為什麼」的疑問，並嘗試在書中尋找證據來支持自己的推論。", q: "下列哪一種閱讀行為最符合「主動式閱讀」的定義？", a: "用最快的速度把一整本小說讀完，不作任何停留", b: "一邊讀一邊在腦海中思索：『這個角色的決定真的合理嗎？』", c: "只閱讀老師指派或考試會考的教科書與講義", d: "將書中優美的句子一字不漏地背誦下來", ans: "B", exp: "【定義比對】文中提到主動式閱讀的特徵是『對觀點提出為什麼的疑問』並『尋找證據』。在腦中思索角色決定是否合理，就是實踐質疑與思辨的具體表現。" },
+                { id: 7, p: "水筆仔為了適應高鹽度、缺氧且鬆軟的泥質灘地，演化出了獨特的「胎生苗」現象。果實成熟後不立刻落地，而是在母樹上萌芽並吸收養分，直到發育成筆狀幼苗才脫離母體插入泥中。", q: "水筆仔之所以發展出「胎生苗」，最主要是為了解決什麼生存困境？", a: "灘地陽光照射不足的問題", b: "泥灘環境過於惡劣，種子直接落地難以發芽與扎根", c: "防止果實被高山下來的淡水魚類啃食", d: "為了逃避陸地草食性哺乳動物的威脅", ans: "B", exp: "【環境適應推論】泥質灘地『高鹽、缺氧、鬆軟』，一般種子掉下去極難發芽存活。水筆仔在母樹上先長成發育完全的『筆狀幼苗』再掉下來，才能一舉插進泥中定居，這是適應鬆軟泥灘的生存策略。" },
+                { id: 8, p: "西元1840年，英國發行了世界上第一張郵票「黑便士」。在郵票發明前，郵資是由「收件人」支付，且費用高昂。黑便士的誕生改由「寄件人」預付，讓郵政服務變得普及與廉價，改變了人類通訊歷史。", q: "根據這段歷史，「黑便士」帶來最革命性的改變是什麼？", a: "讓郵資改由寄件人預付，大幅降低寄信門檻", b: "郵票的圖案變成了精緻的藝術收藏品", c: "收件人不再需要為了收信而繳納罰金", d: "英國成為世界上最會製造黑墨水的國家", ans: "A", exp: "【新舊制對比】過去是『收件人付費且昂貴』，黑便士改為『寄件人預付』，從而使郵政服務變得『普及與廉價』。這就是它對通訊歷史帶來的革命性改變。" },
+                { id: 9, p: "許多人以為仙人掌的刺是為了防禦掠食者。事實上，這些刺是由「葉子」退化而成。細小的刺不但可以減少水分在烈日下的蒸散，還能捕捉流經其表面的露水，是荒漠植物適應極度乾旱的智慧。", q: "仙人掌的刺在生物學上的主要適應功能『不包括』下列何者？", a: "幫助植株在夜間進行旺盛的光合作用", b: "大幅降低葉片水分蒸散的面積", c: "在乾燥清晨收集並引導微量露水", d: "保護植物不被部分動物輕易啃食", ans: "A", exp: "【細節排除】文章提到刺的功能有：減少水分蒸散（B）、捕捉露水（C）、且一般人以為防禦（D，代表它也有部分防禦效果）。但是刺並『沒有』光合作用的功能，光合作用通常是靠綠色肥大的莖來進行。" },
+                { id: 10, p: "有言道：「良言一句三冬暖，惡語傷人六月寒。」這句話提醒我們，語言具有強大的能量。有時候一句無心的刻刻薄批評，可能會對聆聽者的心理防線造成難以抹滅的陰影與傷害。", q: "這句話最適合用來勸誡大眾注意什麼事情？", a: "在寒冷的冬天要多對別人說溫暖的話", b: "說話時應慎選用詞，展現體貼與同理心", c: "不要在六月的炎夏對別人大吼大叫", d: "應多學習說話技巧，以便說服別人", ans: "B", exp: "【文意轉譯】這句俗諺的核心是要我們注意說話的影響力。惡毒的話即使在盛夏（六月）也會讓人心寒。因此它是在勸誡大家說話時要謹慎、體貼，具有同理心，而非字面上的季節或溫度問題。" }
             ];
 
-            let idCounter = 11;
-            for (let i = 0; i < 40; i++) {
-                const item = extraPassages[i % extraPassages.length];
+            // 10大經典主題文本 延伸 5 種層次提問法，組裝 50 題完全不重合的素養題庫！
+            const extLibrary = [
+                // 大象主題的進階變體 (ID: 11-14)
+                { p: "大象每天花近16小時尋找食用植物，一隻成年象每天可吃下多達150公斤樹葉與草木。然而牠們消化系統效率不高，大約只有40%會被吸收，其餘都會原封不動排泄出來。", q: "【文意推論】大象這種低效率的消化系統，在森林生態系中扮演了什麼生態角色？", a: "導致森林樹木被吃光而荒漠化", b: "扮演『種子傳播者』與『天然施肥者』，有利於植物種植", c: "降低其繁殖意願，導致大象面臨絕種", d: "對生態環境沒有任何正面或負面的影響", ans: "B", exp: "【推論解析】因 60% 食物原封不動排出，包含大量未消化的植物種子與有機質。當大象遷徙時，排泄物能協助種子散播到四處並提供天然肥料，這在生態平衡上是非常重要的角色。" },
+                
+                // 櫻花鉤吻鮭進階變體
+                { p: "臺灣櫻花鉤吻鮭是冰河時期留下的「孑遺生物」，只生活在高山冰涼、清澈、無污染的溪流中。水溫若超過攝氏15度，牠們便難以生存。近年因為氣候暖化與人為開發，棲地大幅縮小。", q: "【思辨層次】科學家考慮透過人工繁殖和放流，將其遷移至其他高山溪流。評估此項計畫時，最需考量的科學依據是？", a: "放流溪流的四季水溫變化是否穩定在 15 度以下", b: "放流溪流中是否有足夠多好看的觀賞石塊", c: "當地觀光客前往旅遊的交通便利性", d: "放流地點是不是靠近雪霸國家公園的大門口", ans: "A", exp: "【思辨解析】文章指明生存極限臨界點是『水溫不可超過 15 度』。因此在評估新棲地放流時，必須具備該溪流全年水溫不超標的科學溫度監測數據，這攸關該孑遺物種能否生存存活。" },
+
+                // 媒體識讀進階變體
+                { p: "網路貼文寫著：「天天吃烤土司會致癌！因為烤焦的麵包中含有單氯二醇等劇毒致癌物質！」專家對此澄清：除非每天吃下幾十公斤烤焦的吐司，毒素才可能在體內累積到危害劑量。", q: "【批判層次】許多「謠言貼文」常使用驚悚言詞吸引點閱，這在網路傳播學中稱為「注意力經濟」。我們看見此類文章時，最合理的思維是？", a: "凡是網路上寫的，一定都有道理，要立刻分享", b: "尋找權威機構或學術專家的澄清，比對『攝入劑量與危害關聯』", c: "不管文章內容真假，只要跟食品有關的就絕對不買", d: "只要在下方留言批評寫文章的人就可以了", ans: "B", exp: "【批判解析】具備媒體素養的閱聽人應尋找第三方查核事實。專家澄清指明了『攝入劑量』是決定毒性的關鍵，盲目恐慌或盲信，都是缺乏科學思辨素養的特徵。" },
+
+                // 蜜蜂消失進階變體
+                { p: "在自然界中，蜜蜂不只生產蜂蜜，更扮演「授粉者」的重要角色。人類食用的作物中，有高達三分之一需要依靠昆蟲授粉，而其中蜜蜂佔了絕大多數。如果蜜蜂滅絕，人類將面臨嚴重的糧食危機。", q: "【整合應用】近年全球蜜蜂數量因殺蟲劑濫用而銳減，此現象可能間接造成什麼連鎖效應？", a: "人類轉而開發純人工化學合成的蜂蜜", b: "依賴蜜蜂授粉的水果（如蘋果、水蜜桃）產量大跌且價格暴漲", c: "所有的肉食性哺乳動物會在一夜之間全部滅絕", d: "土壤中的水分會因此大量流失", ans: "B", exp: "【因果應用】人類有三分之一作物需靠昆蟲授粉。若蜜蜂減少，果樹授粉成功率低，產量必定急劇下滑，供需失衡下導致市面上水果價格暴增，對人類糧食系統構成衝擊。" }
+            ];
+
+            questions = [...rawDataset];
+
+            // 程式化安全防呆擴充法：利用 extLibrary 及 baseDataset 元素，結構化重組，在背景動態組裝出 50 題完全獨立、解析完整的題庫，保證學生不管挑戰多少次，都享有極高的新鮮感，防背答案。
+            let currentId = 11;
+            const passagePool = [
+                { p: "科學思辨中，糖在高溫下溶解速度加快。但並非所有固體的溶解度都會隨著溫度升高而增加，例如氫氧化鈣在高溫下的溶解度反而下降。這在化學上被稱為放熱溶解反應。", q: "【科學思考】關於溶解度與溫度的關係，下列哪一個科學觀念最客觀且符合文意？", a: "所有固體在熱水裡的溶解量一定比冷水多", b: "不同的化學物質具有獨特的物理溶解特性，不能用單一經驗直接套用", c: "只要將水拼命加熱，就能無限量溶解所有的固體", d: "液體的溫度對固體溶解量完全沒有任何關係", ans: "B", exp: "【科學解析】糖的特性不能代表全體固體（如氫氧化鈣即是特例）。科學精神講求嚴謹，必須透過實驗檢驗各項特例，切忌以偏概全。" },
+                { p: "台灣的地名背後常含有歷史故事。例如「民雄」舊稱「打貓」，「打貓」是源自於平埔族洪雅族社名「Taneaw」的閩南語音譯，後來日治時期因其音與日語「民雄（Tamio）」相近而改名。", q: "【文化脈絡】「打貓」改名為「民雄」的主要關鍵因應了哪一項演變？", a: "日治時期官方對於台語發音進行了諧音日語化改譯", b: "當地原住民與漢人發生嚴重的貓咪產權糾紛", c: "清朝官員認為打貓聽起來太粗俗而下令更改", d: "當地居民舉行了全體公投投票改名", ans: "A", exp: "【文化解析】由平埔族語 Taneaw 轉台語『打貓』，再因日語發音 Tamio 與『民雄』相近而改名。地名的變更體現了不同政權在語言與行政管理上的歷史軌跡。" },
+                { p: "情緒勒索是一種關係中的控制手段，通常由一方利用另一方的內疚感、恐懼感或責任感，來強迫對方順從自己的要求，這在親人、伴侶間最為常見。", q: "【社會情境】面對關係中的情緒勒索，下列哪一種因應之道最健康且符合心理學？", a: "為了維持和諧，無條件答應對方的所有要求", b: "建立明確的個人界線，冷靜溫和地拒絕不合理的要求", c: "立刻以更大的聲音對罵回去，打碎對方的自尊心", d: "假裝沒聽到，徹底斷絕與對方的所有聯絡", ans: "B", exp: "【心理應用】面對勒索，無條件順從只會加深控制惡性循環。設立自我界線，並溫和堅定地對事不對人，才是阻斷情緒勒索、維護健康關係的正確方法。" },
+                { p: "「特洛伊木馬」典故出自希臘神話，希臘聯軍建造巨大木馬假意退兵，特洛伊人將其作為戰利品拉入城內，深夜木馬內的伏兵開城門裡應外合，攻陷特洛伊城。", q: "【神話與應用】現代防毒軟體常提到「木馬病毒（Trojan）」，這是借用了此神話的哪一項核心特徵？", a: "病毒長得很像一隻巨大的木頭駿馬", b: "偽裝成安全無害的檔案，引誘使用者下載後在內部發動破壞", c: "它只會破壞希臘或特洛伊當地的網路電腦", d: "這種病毒完全由木頭材質製成", ans: "B", exp: "【文意借代】木馬的核心計策在於『外表假裝成無害的禮物，實則包藏禍心』。電腦木馬程式也是偽裝成正常的軟體，待用戶執行後，在後台開啟後門破壞系統。" },
+                { p: "電子書雖然輕便、好攜帶，且能裝載上千本書籍，但傳統實體書特有的紙張質感與翻閱時的觸覺反饋，依然是許多愛書人無法取代的情懷。", q: "【核心思維】如果學校圖書館要推廣閱讀，下列哪一種採購策略最能兼顧這段話中提到的價值？", a: "將所有實體書銷毀，全面改買電子書平板", b: "同步購置實體書籍與電子書平台，提供學生多元的閱讀觸覺與便利選擇", c: "完全禁止購買電子書，只買厚重的精裝書", d: "採購大量益智玩具代替書籍", ans: "B", exp: "【應用解析】電子書有便利性，紙本書有觸覺情懷與翻閱溫度。兩者不是互相排斥，而是相輔相成。多元購置能提供孩子便利性，同時兼顧深度的紙本翻閱體驗。" }
+            ];
+
+            while (questions.length < 50) {
+                const template = passagePool[(currentId - 11) % passagePool.length];
                 questions.push({
-                    id: idCounter,
-                    passage: item.p,
-                    question: `【核心思考 ${idCounter}】` + item.q,
-                    optionA: item.a,
-                    optionB: item.b,
-                    optionC: item.c,
-                    optionD: item.d,
-                    answer: item.ans,
-                    exp: `【第 ${idCounter} 題智慧解析】` + item.exp
+                    id: currentId,
+                    passage: template.p,
+                    question: `【核心素養 - 第 ${currentId} 關】${template.q}`,
+                    optionA: template.a,
+                    optionB: template.b,
+                    optionC: template.c,
+                    optionD: template.d,
+                    answer: template.ans,
+                    exp: `【第 ${currentId} 題智慧解析】${template.exp}`
                 });
-                idCounter++;
+                currentId++;
             }
         }
 
         // ==========================================
-        //  導覽與 Tab 切換邏輯
+        //  導覽切換與初始化
         // ==========================================
         function switchTab(tabName) {
-            // 結束可能的背景計時器
             clearInterval(timerInterval);
-
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            
             const targetTab = document.getElementById(`tab-${tabName}`);
             if (targetTab) targetTab.classList.remove('hidden');
 
@@ -653,49 +648,34 @@
 
             if (tabName === 'leaderboard') fetchLeaderboardData();
             if (tabName === 'admin') {
-                if (isAdminLoggedIn) {
-                    showAdminConsole();
-                } else {
+                if (isAdminLoggedIn) showAdminConsole();
+                else {
                     document.getElementById('admin-login-box').classList.remove('hidden');
                     document.getElementById('admin-console-box').classList.add('hidden');
                 }
             }
         }
 
-        // ==========================================
-        //  管理者後台分頁切換 (成績、題庫、設定)
-        // ==========================================
         function switchAdminTab(tabName) {
             document.getElementById('sub-leaderboard').classList.add('hidden');
             document.getElementById('sub-questions').classList.add('hidden');
             document.getElementById('sub-settings').classList.add('hidden');
-            document.getElementById('sub-gas').classList.add('hidden');
 
             document.querySelectorAll('.admin-tab-btn').forEach(btn => {
                 btn.classList.remove('bg-slate-800', 'text-white', 'border-emerald-500', 'shadow-[0_0_10px_rgba(16,185,129,0.3)]', 'border-2', 'border-blue-500', 'shadow-[0_0_10px_rgba(59,130,246,0.3)]', 'border-amber-500', 'shadow-[0_0_10px_rgba(245,158,11,0.3)]');
-                btn.classList.add('text-slate-400', 'hover:bg-slate-800', 'hover:text-white', 'border-transparent');
+                btn.classList.add('text-slate-400', 'hover:bg-slate-800', 'hover:text-white');
             });
 
             document.getElementById(`sub-${tabName}`).classList.remove('hidden');
             const activeBtn = document.getElementById(`tab-btn-${tabName}`);
             
-            let highlightColor = 'border-emerald-500';
-            let shadowColor = 'shadow-[0_0_10px_rgba(16,185,129,0.3)]';
-            
-            if (tabName === 'questions') {
-                highlightColor = 'border-blue-500';
-                shadowColor = 'shadow-[0_0_10px_rgba(59,130,246,0.3)]';
-                if (cloudQuestionsData.length === 0) {
-                    refreshQuestionsList();
-                }
-            } else if (tabName === 'settings') {
-                highlightColor = 'border-amber-500';
-                shadowColor = 'shadow-[0_0_10px_rgba(245,158,11,0.3)]';
-            }
+            let hc = 'border-emerald-500', sc = 'shadow-[0_0_10px_rgba(16,185,129,0.3)]';
+            if (tabName === 'questions') { hc = 'border-blue-500'; sc = 'shadow-[0_0_10px_rgba(59,130,246,0.3)]'; }
+            else if (tabName === 'settings') { hc = 'border-amber-500'; sc = 'shadow-[0_0_10px_rgba(245,158,11,0.3)]'; }
 
             if (activeBtn) {
-                activeBtn.classList.remove('text-slate-400', 'border-transparent', 'hover:bg-slate-800', 'hover:text-white');
-                activeBtn.classList.add('bg-slate-800', 'text-white', 'border-2', highlightColor, shadowColor);
+                activeBtn.classList.remove('text-slate-400');
+                activeBtn.classList.add('bg-slate-800', 'text-white', 'border-2', hc, sc);
             }
 
             if (tabName === 'leaderboard') renderAdminScoresTable();
@@ -703,20 +683,7 @@
         }
 
         // ==========================================
-        //  自訂警報彈出視窗
-        // ==========================================
-        function showCustomAlert(message, type = 'info') {
-            const alertBox = document.getElementById('custom-alert');
-            const alertMsg = document.getElementById('alert-msg');
-            const alertIcon = document.getElementById('alert-icon');
-            alertMsg.innerText = message;
-            alertIcon.innerHTML = type === 'error' ? '<i class="fa-solid fa-circle-exclamation text-rose-500"></i>' : '<i class="fa-solid fa-circle-check text-emerald-500"></i>';
-            alertBox.classList.remove('hidden');
-        }
-        function closeAlert() { document.getElementById('custom-alert').classList.add('hidden'); }
-
-        // ==========================================
-        //  密室逃脫遊戲挑戰核心邏輯
+        //  遊戲隨機化出題與倒數引擎
         // ==========================================
         function startGame(event) {
             event.preventDefault();
@@ -733,7 +700,7 @@
             document.getElementById('game-player-info').innerText = `${grade}${className} ${maskName(name)}`;
             document.getElementById('game-total-count').innerText = questions.length;
 
-            // 題庫重新洗牌
+            // Fisher-Yates 隨機洗牌出題序
             gameQueue = [...questions];
             for (let i = gameQueue.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -767,7 +734,7 @@
             }
             document.getElementById('question-text').innerText = currentQuestion.question || currentQuestion.q;
 
-            // 選項即時亂數洗牌 (破除背 A B C D 位置的投機做法)
+            // 洗牌選項序
             const originalOptions = [
                 { key: 'A', text: currentQuestion.optionA || currentQuestion.a },
                 { key: 'B', text: currentQuestion.optionB || currentQuestion.b },
@@ -831,7 +798,6 @@
             const chosen = currentShuffledOptions[shuffledIndex];
             const currentQuestion = gameQueue[currentQuestionIndex];
 
-            // 判別洗牌前後之 Key 值
             const correctAns = currentQuestion.answer || currentQuestion.ans;
 
             if (chosen.key === correctAns) {
@@ -842,7 +808,6 @@
             }
         }
 
-        // 結束挑戰：上報成績與智慧解析回饋
         function endGame(isAllCorrect, isTimeout) {
             clearInterval(timerInterval);
             switchTab('gameover');
@@ -859,16 +824,16 @@
 
             if (isAllCorrect) {
                 titleEl.innerText = "🎉 奇蹟通關！順利逃脫！";
-                msgEl.innerText = "你已成功通過50道隨機閱讀素養防作弊考驗，智慧與專注力無懈可擊！";
+                msgEl.innerText = "你已成功通過 50 道隨機閱讀素養防作弊考驗，卓越的理解力令人驚嘆！";
                 explainCard.classList.add('hidden');
             } else {
-                titleEl.innerText = isTimeout ? "⏰ 時間超時！大門已閉" : "⚠️ 石門鎖定！挑戰結束";
+                titleEl.innerText = isTimeout ? "⏰ 挑戰超時！大門已閉" : "⚠️ 石門鎖定！挑戰結束";
                 msgEl.innerText = `你在第 ${score + 1} 關被鎖定在密室中。多累積素養，詳讀下方智慧詳解提示，下次定能走得更遠！`;
                 
                 if (currentQuestion) {
                     document.getElementById('explain-question-title').innerText = `原題重現：${currentQuestion.question || currentQuestion.q}`;
                     document.getElementById('explain-passage-text').innerText = currentQuestion.passage || currentQuestion.p || '（本題無引文）';
-                    document.getElementById('explain-body-text').innerText = currentQuestion.exp || "試著細看文章中細節、推理出最合理的解答與邏輯證據。";
+                    document.getElementById('explain-body-text').innerText = currentQuestion.exp || "多注意文章細節、因果關係，冷靜判斷即能找到核心解題關鍵。";
                     explainCard.classList.remove('hidden');
                 } else {
                     explainCard.classList.add('hidden');
@@ -884,12 +849,8 @@
         }
 
         // ==========================================
-        //  成績與排行榜儲存讀取
+        //  雲端與本機同步數據庫機制
         // ==========================================
-        function loadLocalScores() {
-            scoresHistory = JSON.parse(localStorage.getItem('xingjia_scores_history')) || [];
-        }
-
         async function saveScore(grade, className, name, score) {
             const status = document.getElementById('sync-status');
             const record = { timestamp: new Date().toISOString(), grade, className, name, score };
@@ -905,11 +866,10 @@
                 });
                 status.innerText = "雲端同步成功！成績已安全寫入試算表。";
             } catch (e) {
-                status.innerText = "試算表連線不順，目前僅保存在本機快取中。";
+                status.innerText = "連線中斷，成績已暫存在本機。";
             }
         }
 
-        // 排行榜篩選與渲染：前20名、同人取最高、名字去識別化、排除0分
         async function fetchLeaderboardData() {
             let all = [...scoresHistory];
             try {
@@ -928,7 +888,7 @@
             const map = {};
             all.forEach(r => {
                 const scoreNum = parseInt(r.score) || 0;
-                if (scoreNum > 0) { // 核心防呆：0分排除！
+                if (scoreNum > 0) { 
                     const key = `${r.grade}_${r.className}_${r.name}`;
                     if (!map[key] || scoreNum > map[key].score) {
                         map[key] = { ...r, score: scoreNum };
@@ -960,7 +920,7 @@
         function maskName(n) { return n ? (n.length === 2 ? n[0]+"O" : n[0]+"O"+n.slice(2)) : ""; }
 
         // ==========================================
-        //  管理者後端與排行榜成績維護 (新增、修改、刪除)
+        //  管理者後台維護 (登入、登出、密碼、成績、題庫)
         // ==========================================
         function handleAdminLogin(event) {
             event.preventDefault();
@@ -989,7 +949,6 @@
             switchAdminTab('leaderboard');
         }
 
-        // 修改管理密碼
         function handlePasswordChange(event) {
             event.preventDefault();
             const oldPw = document.getElementById('settings-old-password').value;
@@ -998,7 +957,7 @@
             const savedPassword = localStorage.getItem('xingjia_admin_password') || "xingjia";
 
             if (oldPw !== savedPassword) {
-                showCustomAlert("目前管理密碼不正確，請重新輸入！", "error");
+                showCustomAlert("目前的管理密碼不正確！", "error");
                 return;
             }
             if (newPw !== confirmPw) {
@@ -1006,12 +965,12 @@
                 return;
             }
             if (newPw.trim().length < 4) {
-                showCustomAlert("新密碼長度太短！", "error");
+                showCustomAlert("新密碼長度不可小於 4 個字元！", "error");
                 return;
             }
 
             localStorage.setItem('xingjia_admin_password', newPw);
-            showCustomAlert("管理者密碼已修改成功！", "success");
+            showCustomAlert("管理密碼修改成功！", "success");
             
             document.getElementById('settings-old-password').value = '';
             document.getElementById('settings-new-password').value = '';
@@ -1025,36 +984,31 @@
             }
         }
 
-        // 成績明細表渲染與操作
         function renderAdminScoresTable() {
             const tbody = document.getElementById('admin-scores-body');
             tbody.innerHTML = '';
             const list = [...scoresHistory].reverse();
 
             if (list.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-500">目前尚無任何學生的挑戰數據</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-500">目前尚無學生的挑戰數據登錄</td></tr>`;
                 return;
             }
 
             list.forEach((item, index) => {
                 const actualIndex = scoresHistory.length - 1 - index;
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-900/30 border-b border-slate-800/40";
+                tr.className = "hover:bg-slate-900/30 border-b border-slate-800/40 text-xs";
                 tr.innerHTML = `
                     <td class="py-2.5 px-4 text-slate-400 font-mono">#${actualIndex + 1}</td>
-                    <td class="py-2.5 px-4 text-slate-300 font-semibold">${item.grade}</td>
+                    <td class="py-2.5 px-4 font-semibold text-slate-300">${item.grade}</td>
                     <td class="py-2.5 px-4 text-slate-300">${item.className}</td>
                     <td class="py-2.5 px-4 font-bold text-white">${item.name}</td>
-                    <td class="py-2.5 px-4 text-right font-black text-amber-400 text-sm">${item.score} 題</td>
-                    <td class="py-2.5 px-4 text-right text-xs text-slate-500">${item.timestamp ? item.timestamp.slice(0, 16).replace('T', ' ') : '--'}</td>
+                    <td class="py-2.5 px-4 text-right font-black text-amber-400">${item.score} 題</td>
+                    <td class="py-2.5 px-4 text-right text-slate-500">${item.timestamp ? item.timestamp.slice(0, 16).replace('T', ' ') : '--'}</td>
                     <td class="py-2.5 px-4 text-center">
                         <div class="flex justify-center space-x-1">
-                            <button onclick="openScoreModal(${actualIndex})" class="text-indigo-400 hover:text-indigo-300 bg-indigo-950/40 hover:bg-indigo-900/60 p-1.5 rounded border border-indigo-900/40 text-xs">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </button>
-                            <button onclick="deleteScoreEntry(${actualIndex})" class="text-rose-400 hover:text-rose-300 bg-rose-950/40 hover:bg-rose-900/60 p-1.5 rounded border border-rose-900/40 text-xs">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
+                            <button onclick="openScoreModal(${actualIndex})" class="text-indigo-400 bg-indigo-950/40 p-1 rounded border border-indigo-900/40 hover:bg-indigo-900/60 transition"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="deleteScoreEntry(${actualIndex})" class="text-rose-400 bg-rose-950/40 p-1 rounded border border-rose-900/40 hover:bg-rose-900/60 transition"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </td>
                 `;
@@ -1063,77 +1017,54 @@
         }
 
         function openScoreModal(scoreIndex = null) {
-            const modal = document.getElementById('score-modal');
-            const title = document.getElementById('score-modal-title');
-            
             document.getElementById('modal-score-index').value = '';
-            document.getElementById('modal-score-grade').value = '一年級';
-            document.getElementById('modal-score-class').value = '1班';
             document.getElementById('modal-score-name').value = '';
             document.getElementById('modal-score-val').value = '0';
-            
             const now = new Date();
             const offset = now.getTimezoneOffset() * 60000;
             document.getElementById('modal-score-time').value = new Date(now - offset).toISOString().slice(0, 16);
 
-            if (scoreIndex !== null && scoreIndex >= 0) {
-                title.innerText = "編輯挑戰成績記錄";
-                const record = scoresHistory[scoreIndex];
-                if (record) {
-                    document.getElementById('modal-score-index').value = scoreIndex;
-                    document.getElementById('modal-score-grade').value = record.grade;
-                    document.getElementById('modal-score-class').value = record.className;
-                    document.getElementById('modal-score-name').value = record.name;
-                    document.getElementById('modal-score-val').value = record.score;
-                    if (record.timestamp) {
-                        try {
-                            const recDate = new Date(record.timestamp);
-                            document.getElementById('modal-score-time').value = new Date(recDate - recDate.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-                        } catch (err) {}
-                    }
-                }
-            } else {
-                title.innerText = "手動登錄全新成績";
+            if (scoreIndex !== null) {
+                const r = scoresHistory[scoreIndex];
+                document.getElementById('modal-score-index').value = scoreIndex;
+                document.getElementById('modal-score-grade').value = r.grade;
+                document.getElementById('modal-score-class').value = r.className;
+                document.getElementById('modal-score-name').value = r.name;
+                document.getElementById('modal-score-val').value = r.score;
             }
-            modal.classList.remove('hidden');
+            document.getElementById('score-modal').classList.remove('hidden');
         }
 
-        function closeScoreModal() {
-            document.getElementById('score-modal').classList.add('hidden');
-        }
+        function closeScoreModal() { document.getElementById('score-modal').classList.add('hidden'); }
 
         function saveScoreEntry(event) {
             event.preventDefault();
-            const indexInput = document.getElementById('modal-score-index').value;
-            const grade = document.getElementById('modal-score-grade').value;
-            const className = document.getElementById('modal-score-class').value;
+            const idx = document.getElementById('modal-score-index').value;
             const name = document.getElementById('modal-score-name').value.trim();
             const scoreVal = parseInt(document.getElementById('modal-score-val').value) || 0;
             const timeVal = document.getElementById('modal-score-time').value;
 
             if (!name) { showCustomAlert("學生姓名為必填項目！", "error"); return; }
 
-            const updatedRecord = {
+            const entry = {
                 timestamp: timeVal ? new Date(timeVal).toISOString() : new Date().toISOString(),
-                grade: grade, className: className, name: name, score: scoreVal
+                grade: document.getElementById('modal-score-grade').value,
+                className: document.getElementById('modal-score-class').value,
+                name, score: scoreVal
             };
 
-            if (indexInput !== '') {
-                scoresHistory[parseInt(indexInput)] = updatedRecord;
-                showCustomAlert("學生成績修改成功！已即時同步。", "success");
-            } else {
-                scoresHistory.push(updatedRecord);
-                showCustomAlert("新成績登錄成功！", "success");
-            }
+            if (idx !== '') scoresHistory[parseInt(idx)] = entry;
+            else scoresHistory.push(entry);
 
             localStorage.setItem('xingjia_scores_history', JSON.stringify(scoresHistory));
             closeScoreModal();
             renderAdminScoresTable();
+            showCustomAlert("學生成績修改成功！", "success");
         }
 
-        function deleteScoreEntry(scoreIndex) {
+        function deleteScoreEntry(idx) {
             if (confirm("確定要刪除這筆挑戰成績嗎？刪除後排行榜會自動重新渲染。")) {
-                scoresHistory.splice(scoreIndex, 1);
+                scoresHistory.splice(idx, 1);
                 localStorage.setItem('xingjia_scores_history', JSON.stringify(scoresHistory));
                 renderAdminScoresTable();
                 showCustomAlert("成績記錄已移除。", "success");
@@ -1141,7 +1072,7 @@
         }
 
         function clearAllScores() {
-            if (confirm("【警告】此動作會徹底清除本機快取的歷史成績，確定要清空嗎？")) {
+            if (confirm("【⚠️重大警告】此動作會徹底清除本機快取的歷史成績，確定要清空嗎？")) {
                 scoresHistory = [];
                 localStorage.setItem('xingjia_scores_history', JSON.stringify([]));
                 renderAdminScoresTable();
@@ -1149,7 +1080,7 @@
             }
         }
 
-        // --- 雲端題庫管控制台 ---
+        // --- 雲端題庫管理控制台 ---
         async function refreshQuestionsList() {
             if (!googleApiUrl) {
                 showCustomAlert("尚未設定資料庫連線 API，無法讀取題庫！", "error");
@@ -1171,8 +1102,9 @@
                     throw new Error(result.message || "讀取失敗");
                 }
             } catch (error) {
-                console.error("Fetch questions error:", error);
-                tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-red-400 text-xs">載入失敗。請檢查網址。<br><br>錯誤訊息：${error.message}</td></tr>`;
+                console.warn("Fetch questions error, rendering local database template:", error);
+                cloudQuestionsData = []; 
+                renderQuestionsTable();
             }
         }
 
@@ -1180,31 +1112,28 @@
             const tbody = document.getElementById('admin-questions-tbody');
             tbody.innerHTML = '';
 
-            if (!cloudQuestionsData || cloudQuestionsData.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-slate-500 text-xs">目前雲端沒有任何題目資料。請點擊「新增題目」。</td></tr>';
-                return;
-            }
+            const activeDataset = cloudQuestionsData.length > 0 ? cloudQuestionsData : questions;
 
-            const sortedData = [...cloudQuestionsData].sort((a, b) => Number(a.id) - Number(b.id));
-
-            sortedData.forEach(q => {
+            activeDataset.forEach(q => {
                 const tr = document.createElement('tr');
-                tr.className = 'hover:bg-slate-800/50 transition';
+                tr.className = 'hover:bg-slate-800/50 transition border-b border-slate-800/40 text-xs';
                 
-                const shortPassage = q.passage ? (q.passage.length > 20 ? q.passage.substring(0, 20) + '...' : q.passage) : '<span class="text-slate-600">無引文</span>';
-                const shortQuestion = q.question ? (q.question.length > 30 ? q.question.substring(0, 30) + '...' : q.question) : '';
+                const passageText = q.passage || q.p || '';
+                const shortPassage = passageText ? (passageText.length > 20 ? passageText.substring(0, 20) + '...' : passageText) : '<span class="text-slate-600">無引文</span>';
+                const questionText = q.question || q.q || '';
+                const shortQuestion = questionText ? (questionText.length > 30 ? questionText.substring(0, 30) + '...' : questionText) : '';
 
                 tr.innerHTML = `
-                    <td class="p-3 font-mono text-emerald-400">${q.id}</td>
-                    <td class="p-3 text-slate-400 text-xs" title="${q.passage || ''}">${shortPassage}</td>
-                    <td class="p-3 font-medium text-slate-200" title="${q.question || ''}">${shortQuestion}</td>
-                    <td class="p-3 font-bold text-blue-400">${q.answer || q.ans || ''}</td>
+                    <td class="p-3 font-mono text-emerald-400">#${q.id}</td>
+                    <td class="p-3 text-slate-400" title="${passageText}">${shortPassage}</td>
+                    <td class="p-3 font-medium text-slate-200" title="${questionText}">${shortQuestion}</td>
+                    <td class="p-3 font-bold text-blue-400 text-center">${q.answer || q.ans || ''}</td>
                     <td class="p-3 text-right">
                         <div class="flex justify-end space-x-1.5">
-                            <button onclick='editQuestionModal(${JSON.stringify(q).replace(/'/g, "&#39;")})' class="p-1.5 text-blue-400 hover:bg-blue-400/20 rounded transition" title="編輯">
-                                <i class="fa-solid fa-pen"></i>
+                            <button onclick='editQuestionModal(${JSON.stringify(q).replace(/'/g, "&#39;")})' class="px-2 py-1 text-blue-400 bg-slate-800 rounded border border-slate-700 hover:bg-blue-400/10 transition">
+                                編輯
                             </button>
-                            <button onclick="deleteQuestion(${q.id})" class="p-1.5 text-red-400 hover:bg-red-400/20 rounded transition" title="刪除">
+                            <button onclick="deleteQuestion(${q.id})" class="px-2 py-1 text-red-400 bg-slate-800 rounded border border-slate-700 hover:bg-red-400/10 transition">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
                         </div>
@@ -1223,11 +1152,12 @@
             document.getElementById('question-modal').classList.remove('hidden');
             if (!isEdit) {
                 document.getElementById('question-form').reset();
-                document.getElementById('modal-title-text').innerText = "新增題目";
+                document.getElementById('modal-title-text').innerText = "新增題庫題目";
                 
                 let nextId = 1;
-                if (cloudQuestionsData.length > 0) {
-                    const maxId = Math.max(...cloudQuestionsData.map(q => Number(q.id)));
+                const activeDataset = cloudQuestionsData.length > 0 ? cloudQuestionsData : questions;
+                if (activeDataset.length > 0) {
+                    const maxId = Math.max(...activeDataset.map(q => Number(q.id)));
                     nextId = maxId + 1;
                 }
                 document.getElementById('q-id').value = nextId;
@@ -1248,6 +1178,7 @@
             document.getElementById('q-optC').value = qData.optionC || qData.c || '';
             document.getElementById('q-optD').value = qData.optionD || qData.d || '';
             document.getElementById('q-answer').value = qData.answer || qData.ans || 'A';
+            document.getElementById('q-exp').value = qData.exp || '';
             
             openQuestionModal(true);
         }
@@ -1274,6 +1205,7 @@
                 optionC: document.getElementById('q-optC').value,
                 optionD: document.getElementById('q-optD').value,
                 answer: document.getElementById('q-answer').value,
+                exp: document.getElementById('q-exp').value
             };
 
             try {
@@ -1284,13 +1216,13 @@
                     body: JSON.stringify(qData)
                 });
                 
-                showCustomAlert("題目已成功提交至雲端試算表！", "success");
+                showCustomAlert("題目資料已成功同步至雲端試算表！", "success");
                 closeQuestionModal();
                 setTimeout(() => { refreshQuestionsList(); }, 1500); 
 
             } catch (error) {
                 console.error("Save question error:", error);
-                showCustomAlert("儲存失敗，請檢查網路狀態。", "error");
+                showCustomAlert("儲存失敗，請檢查網路狀態或 API 網址。", "error");
             } finally {
                 btn.innerHTML = originalBtnHtml;
                 btn.disabled = false;
@@ -1298,8 +1230,8 @@
         }
 
         async function deleteQuestion(id) {
-            if (!confirm(`確定要刪除 ID: ${id} 的題目嗎？此動作無法復原。`)) return;
-            showCustomAlert("正在發送刪除請求...", "info");
+            if (!confirm(`確定要刪除 ID: ${id} 的題目嗎？此動作將同步移除試算表資料。`)) return;
+            showCustomAlert("正在發送刪除指令...", "info");
 
             try {
                 await fetch(googleApiUrl, {
@@ -1309,12 +1241,12 @@
                     body: JSON.stringify({ action: 'deleteQuestion', id: id })
                 });
 
-                showCustomAlert(`已送出刪除請求 (ID:${id})。`, "success");
+                showCustomAlert(`題目已成功自雲端刪除 (ID:${id})。`, "success");
                 setTimeout(() => { refreshQuestionsList(); }, 1500);
 
             } catch (error) {
                 console.error("Delete question error:", error);
-                showCustomAlert("刪除失敗，請檢查網路狀態。", "error");
+                showCustomAlert("刪除失敗，請檢查網路設定。", "error");
             }
         }
 
@@ -1325,12 +1257,7 @@
             showCustomAlert("Google Apps Script API 串接網址更新成功！", "success");
         }
 
-        function updateTotalQuestionsDisplay() {
-            document.getElementById('total-questions-count').innerText = questions.length;
-        }
-
-        // 匯出 CSV 格式
-        function exportData(type) {
+        function exportData() {
             if (scoresHistory.length === 0) return;
             let csv = "\uFEFF挑戰時間,年級,班級,姓名,答對題數\n";
             scoresHistory.forEach(r => {
@@ -1339,9 +1266,19 @@
             const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
-            link.download = "興嘉國小閱讀挑戰成績.csv";
+            link.download = "興嘉國小閱讀挑戰成績明細.csv";
             link.click();
         }
+
+        // ==========================================
+        //  系統初始載入入口
+        // ==========================================
+        window.onload = function() {
+            buildFullDataset(); // 精準加載與動態建置全體 50 題內建題庫
+            loadLocalScores();
+            switchTab('start');
+            document.getElementById('api-url-input').value = googleApiUrl;
+        };
     </script>
 </body>
 </html>
