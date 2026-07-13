@@ -575,65 +575,9 @@
 
     <script>
         // ==========================================
-        // ==========================================
-        function maskName(name) {
-            if (!name) return "";
-            if (name.length <= 1) return name;
-            if (name.length === 2) return name[0] + "○";
-            return name[0] + "○" + name.slice(2);
-        }
-
-        // 自訂警告提示框
-        function showCustomAlert(msg, type = "info") {
-            const alertBox = document.getElementById('custom-alert');
-            const alertMsg = document.getElementById('alert-msg');
-            const alertIcon = document.getElementById('alert-icon');
-            if (!alertBox || !alertMsg) return;
-
-            alertMsg.innerText = msg;
-            
-            if (type === "success") {
-                alertIcon.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400"></i>';
-            } else if (type === "error") {
-                alertIcon.innerHTML = '<i class="fa-solid fa-circle-xmark text-rose-500"></i>';
-            } else {
-                alertIcon.innerHTML = '<i class="fa-solid fa-circle-info text-blue-400"></i>';
-            }
-
-            alertBox.classList.remove('hidden');
-        }
-
-        function closeAlert() {
-            const alertBox = document.getElementById('custom-alert');
-            if (alertBox) alertBox.classList.add('hidden');
-        }
-
-        // 自訂確認視窗控制（完美合規，避開傳統 confirm 崩潰）
-        let confirmCallback = null;
-        function showCustomConfirm(msg, callback) {
-            const confirmBox = document.getElementById('custom-confirm');
-            const confirmMsg = document.getElementById('confirm-msg');
-            if (!confirmBox || !confirmMsg) return;
-
-            confirmMsg.innerText = msg;
-            confirmCallback = callback;
-            confirmBox.classList.remove('hidden');
-        }
-
-        function closeConfirm(isConfirmed) {
-            const confirmBox = document.getElementById('custom-confirm');
-            if (confirmBox) confirmBox.classList.add('hidden');
-
-            if (isConfirmed && confirmCallback) {
-                confirmCallback();
-            }
-            confirmCallback = null;
-        }
-
-        // ==========================================
+        //  遊戲資料與狀態設定
         // ==========================================
         let questions = []; 
-        let localBackupQuestions = []; // 存放 50 題內建基礎備援
         let gameQueue = []; 
         let currentQuestionIndex = 0; 
         let playerInfo = { grade: '', className: '', name: '' };
@@ -645,24 +589,14 @@
         let timeLeft = QUESTION_TIME_LIMIT;
         let currentShuffledOptions = [];
 
-        // 雲端資料庫儲存預設端點
+        // 雲端資料庫儲存
         const defaultApiUrl = "https://script.google.com/macros/s/AKfycby_tjcqPe-fIBtuUizWuOy3Yj39LqXzaLG_I6Wl-1ZY0r10GAHT1yCtQ8MpyS9kCIqZ/exec";
         let googleApiUrl = localStorage.getItem('xingjia_gas_url') || defaultApiUrl;
         let cloudQuestionsData = [];
-
-        function loadLocalScores() {
-            scoresHistory = JSON.parse(localStorage.getItem('xingjia_scores_history')) || [];
-        }
-
-        function updateTotalQuestionsDisplay() {
-            const adminCount = document.getElementById('total-questions-count');
-            if (adminCount) adminCount.innerText = questions.length;
-            
-            const startCount = document.getElementById('start-total-count');
-            if (startCount) startCount.innerText = questions.length;
-        }
+        let localBackupQuestions = [];
 
         // ==========================================
+        //  內建 50 題高品質素養題庫生成與解析（備援用）
         // ==========================================
         function buildFullDataset() {
             const rawDataset = [
@@ -707,12 +641,12 @@
         }
 
         // ==========================================
+        //  雲端與本機題目融合邏輯
         // ==========================================
         function mergeCloudAndLocalQuestions(cloudQs) {
-            // 複製雲端自訂題作為優先項目
             const merged = [...cloudQs];
             
-            // 將不重複的本機題目無上限地全部併入！(不設限50題)
+            // 將不重複的本機題目全部追加到雲端題目後方
             localBackupQuestions.forEach(localQ => {
                 const isDuplicate = merged.some(q => q.question.trim() === localQ.question.trim());
                 if (!isDuplicate) {
@@ -720,7 +654,7 @@
                 }
             });
 
-            // 重新排列統一索引編號，維持連貫
+            // 重新排列統一的關卡 ID 編號，避免重複
             return merged.map((q, idx) => ({
                 ...q,
                 id: idx + 1
@@ -728,6 +662,7 @@
         }
 
         // ==========================================
+        //  導覽切換與初始題庫加載
         // ==========================================
         function switchTab(tabName) {
             clearInterval(timerInterval);
