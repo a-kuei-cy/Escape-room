@@ -561,6 +561,40 @@
 
     <script>
         // ==========================================
+        //  系統核心輔助公用函式 (修復開啟石門、Alert 崩潰問題)
+        // ==========================================
+        function maskName(name) {
+            if (!name) return "";
+            if (name.length <= 1) return name;
+            if (name.length === 2) return name[0] + "○";
+            return name[0] + "○" + name.slice(2);
+        }
+
+        function showCustomAlert(msg, type = "info") {
+            const alertBox = document.getElementById('custom-alert');
+            const alertMsg = document.getElementById('alert-msg');
+            const alertIcon = document.getElementById('alert-icon');
+            if (!alertBox || !alertMsg) return;
+
+            alertMsg.innerText = msg;
+            
+            if (type === "success") {
+                alertIcon.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400"></i>';
+            } else if (type === "error") {
+                alertIcon.innerHTML = '<i class="fa-solid fa-circle-xmark text-rose-500"></i>';
+            } else {
+                alertIcon.innerHTML = '<i class="fa-solid fa-circle-info text-blue-400"></i>';
+            }
+
+            alertBox.classList.remove('hidden');
+        }
+
+        function closeAlert() {
+            const alertBox = document.getElementById('custom-alert');
+            if (alertBox) alertBox.classList.add('hidden');
+        }
+
+        // ==========================================
         //  載入本地成績快取
         // ==========================================
         function loadLocalScores() {
