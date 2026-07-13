@@ -927,6 +927,20 @@
 
         function maskName(n) { return n ? (n.length === 2 ? n[0]+"O" : n[0]+"O"+n.slice(2)) : ""; }
 
+        // 載入本地成績快取
+        function loadLocalScores() {
+            scoresHistory = JSON.parse(localStorage.getItem('xingjia_scores_history')) || [];
+        }
+
+        // 更新畫面上的總題數顯示
+        function updateTotalQuestionsDisplay() {
+            const adminCount = document.getElementById('total-questions-count');
+            if (adminCount) adminCount.innerText = questions.length;
+            
+            const startCount = document.getElementById('start-total-count');
+            if (startCount) startCount.innerText = questions.length;
+        }
+
         // ==========================================
         //  管理者後端維護 (登入、密碼)
         // ==========================================
