@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>興嘉國小 閱讀素養密室逃脫挑戰</title>
+    <title>興嘉國小 閱讀素養密室逃脫挑戰 | Hsing-Chia Reading Literacy Escape Room Challenge</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
@@ -18,6 +20,7 @@
         .timer-transition {
             transition: width 1s linear, background-color 0.5s ease;
         }
+        /* 自訂捲軸樣式 */
         .custom-scrollbar::-webkit-scrollbar {
             width: 6px;
         }
@@ -35,6 +38,7 @@
 </head>
 <body class="text-slate-100 min-h-screen flex flex-col justify-between">
 
+    <!-- 導覽列 -->
     <header class="bg-slate-900 border-b border-slate-800 py-4 px-6 sticky top-0 z-50">
         <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('start')">
@@ -48,21 +52,21 @@
                     <p class="text-xs text-slate-400">閱讀素養密室逃脫挑戰 | Escape Room Challenge</p>
                 </div>
             </div>
-            <!-- 公開分頁導覽：首頁、排行榜、管理登入 -->
             <nav class="flex space-x-2">
                 <button onclick="switchTab('start')" class="nav-btn px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition hover:bg-slate-800 text-slate-300" id="nav-start">
-                    <i class="fa-solid fa-gamepad mr-1"></i> 挑戰首頁
+                    <i class="fa-solid fa-gamepad mr-1"></i> <span class="hidden sm:inline">挑戰首頁</span><span class="sm:hidden">首頁</span>
                 </button>
-                <button onclick="switchTab('leaderboard')" class="nav-btn px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition bg-slate-800 text-emerald-400 border border-emerald-500/30" id="nav-leaderboard">
-                    <i class="fa-solid fa-trophy mr-1 text-amber-500"></i> 智慧英雄榜 (排行榜)
+                <button onclick="switchTab('leaderboard')" class="nav-btn px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition hover:bg-slate-800 text-slate-300" id="nav-leaderboard">
+                    <i class="fa-solid fa-trophy mr-1 text-amber-500"></i> <span class="hidden sm:inline">智慧英雄榜 (排行榜)</span><span class="sm:hidden">排行</span>
                 </button>
                 <button onclick="switchTab('admin')" class="nav-btn px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition hover:bg-slate-800 text-slate-300" id="nav-admin">
-                    <i class="fa-solid fa-lock mr-1"></i> 管理登入
+                    <i class="fa-solid fa-lock mr-1"></i> <span class="hidden sm:inline">管理登入</span><span class="sm:hidden">管理</span>
                 </button>
             </nav>
         </div>
     </header>
 
+    <!-- 主內容區 -->
     <main class="flex-grow flex items-center justify-center p-4 md:p-8">
         <div class="w-full max-w-4xl">
             
@@ -73,10 +77,10 @@
                 </div>
                 <h2 class="text-2xl md:text-3xl font-black text-white mb-2 leading-snug">
                     興嘉國小 閱讀素養密室逃脫挑戰
-                    <span class="block text-sm md:text-base text-emerald-400 font-bold mt-1">Hsing-Chia Reading Escape Room</span>
+                    <span class="block text-sm md:text-base text-emerald-400 font-bold mt-1">Hsing-Chia Reading Literacy Escape Room Challenge</span>
                 </h2>
                 <p class="text-slate-400 mb-8 max-w-xl mx-auto text-xs md:text-sm leading-relaxed">
-                    歡迎來到閱讀密室！系統具備<b>【雙重亂數洗牌機制】</b>，每個人抽到的題目順序與選項（A, B, C, D）位置完全不同。每一題有 45 秒限制，仔細閱讀引文找出證據，答錯或時間耗盡即宣告挑戰中止！
+                    歡迎挑戰閱讀密室！本系統具備<b>【雙重亂數洗牌機制】</b>。每個人抽到的題目順序、甚至是選項（A, B, C, D）的排列位置完全不同，每一題有 45 秒限制，仔細閱讀引文找出證據，答錯或時間耗盡即宣告挑戰中止！
                 </p>
 
                 <!-- 報名表單 -->
@@ -85,14 +89,14 @@
                         <label class="block text-sm font-medium text-slate-300 mb-1">
                             <i class="fa-solid fa-graduation-cap text-emerald-500 mr-1"></i> 選擇年級
                         </label>
-                        <select id="user-grade" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none">
+                        <select id="user-grade" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
                             <option value="">請選擇年級...</option>
-                            <option value="一年級">一年級</option>
-                            <option value="二年級">二年級</option>
-                            <option value="三年級">三年級</option>
-                            <option value="四年級">四年級</option>
-                            <option value="五年級">五年級</option>
-                            <option value="六年級">六年級</option>
+                            <option value="一年級">一年級 (Grade 1)</option>
+                            <option value="二年級">二年級 (Grade 2)</option>
+                            <option value="三年級">三年級 (Grade 3)</option>
+                            <option value="四年級">四年級 (Grade 4)</option>
+                            <option value="五年級">五年級 (Grade 5)</option>
+                            <option value="六年級">六年級 (Grade 6)</option>
                         </select>
                     </div>
 
@@ -100,12 +104,16 @@
                         <label class="block text-sm font-medium text-slate-300 mb-1">
                             <i class="fa-solid fa-users text-emerald-500 mr-1"></i> 選擇班級
                         </label>
-                        <select id="user-class" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none">
+                        <select id="user-class" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
                             <option value="">請選擇班級...</option>
-                            <option value="1班">1 班</option><option value="2班">2 班</option>
-                            <option value="3班">3 班</option><option value="4班">4 班</option>
-                            <option value="5班">5 班</option><option value="6班">6 班</option>
-                            <option value="7班">7 班</option><option value="8班">8 班</option>
+                            <option value="1班">1 班 (Class 1)</option>
+                            <option value="2班">2 班 (Class 2)</option>
+                            <option value="3班">3 班 (Class 3)</option>
+                            <option value="4班">4 班 (Class 4)</option>
+                            <option value="5班">5 班 (Class 5)</option>
+                            <option value="6班">6 班 (Class 6)</option>
+                            <option value="7班">7 班 (Class 7)</option>
+                            <option value="8班">8 班 (Class 8)</option>
                         </select>
                     </div>
 
@@ -113,20 +121,22 @@
                         <label class="block text-sm font-medium text-slate-300 mb-1">
                             <i class="fa-solid fa-user text-emerald-500 mr-1"></i> 挑戰者姓名
                         </label>
-                        <input type="text" id="user-name" required placeholder="請輸入真實姓名" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none">
+                        <input type="text" id="user-name" required placeholder="請輸入真實姓名" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
                     </div>
 
                     <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-lg transition transform hover:scale-[1.01] flex flex-col items-center justify-center shadow-lg">
                         <span class="flex items-center space-x-2 text-base">
                             <i class="fa-solid fa-door-open"></i>
-                            <span>開啟石門．開啟無限制挑戰</span>
+                            <span>開啟石門．開啟智慧挑戰</span>
                         </span>
-                        <span class="text-[10px] text-emerald-200 font-normal mt-0.5">Start Escape Challenge (<span id="start-total-count">載入中...</span> 題關卡)</span>
+                        <span class="text-[10px] text-emerald-200 font-normal mt-0.5">Start Escape Challenge (<span id="start-total-count">0</span> 題關卡)</span>
                     </button>
                 </form>
             </div>
 
+            <!-- 2. 遊戲進行畫面 -->
             <div id="tab-game" class="tab-content hidden wood-gradient rounded-2xl shadow-2xl border border-slate-800 p-6 md:p-8">
+                <!-- 狀態資訊欄 -->
                 <div class="flex flex-wrap justify-between items-center gap-4 bg-slate-900/80 p-4 rounded-xl border border-slate-800 mb-4">
                     <div class="flex items-center space-x-3">
                         <span class="bg-emerald-500/10 text-emerald-400 px-3 py-1.5 rounded-lg text-sm font-bold border border-emerald-500/20">
@@ -149,11 +159,12 @@
                     </div>
                 </div>
 
-                <!-- 答題進度條 -->
+                <!-- 答題時間進度條 -->
                 <div class="w-full bg-slate-950 rounded-full h-2.5 mb-4 overflow-hidden border border-slate-800">
                     <div id="timer-progress" class="bg-gradient-to-r from-emerald-500 to-rose-500 h-full w-full timer-transition"></div>
                 </div>
 
+                <!-- 關卡進度條 -->
                 <div class="w-full bg-slate-800 rounded-full h-1 mb-6">
                     <div id="game-progress" class="bg-teal-400 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
                 </div>
@@ -162,26 +173,31 @@
                 <div class="space-y-6">
                     <div class="bg-slate-900/40 p-6 rounded-xl border border-slate-800">
                         <span class="bg-indigo-500/10 text-indigo-400 text-xs font-bold px-2.5 py-1 rounded-full border border-indigo-500/20 mb-3 inline-block">
-                            關卡 <span id="question-index">1</span> / <span id="game-total-count">0</span>
+                            關卡 <span id="question-index">1</span> <span id="game-total-count-label"></span>
                         </span>
+                        <!-- 閱讀文章引文 -->
                         <div id="question-passage-box" class="mb-4 bg-slate-950/80 p-4 rounded-lg border border-slate-800/80 text-slate-300 text-sm leading-relaxed overflow-y-auto max-h-48 custom-scrollbar">
                         </div>
+                        <!-- 問題主幹 -->
                         <h3 class="text-lg md:text-xl font-bold text-white leading-relaxed" id="question-text">
                             讀取題目中...
                         </h3>
                     </div>
 
+                    <!-- 選項按鈕組 -->
                     <div class="grid grid-cols-1 gap-3" id="options-container">
                     </div>
                 </div>
             </div>
 
+            <!-- 3. 遊戲結束/結算畫面 -->
             <div id="tab-gameover" class="tab-content hidden wood-gradient rounded-2xl shadow-2xl border border-slate-800 p-6 md:p-10 text-center">
                 <div id="gameover-icon" class="mb-6 inline-block bg-rose-950/50 border border-rose-500/30 p-5 rounded-full text-rose-500">
                     <i class="fa-solid fa-skull-crossbones text-5xl"></i>
                 </div>
                 <h2 class="text-3xl font-black text-white mb-2" id="gameover-title">挑戰結束</h2>
                 
+                <!-- 智慧閱讀素養解析回饋卡 -->
                 <div id="explain-card" class="bg-slate-900/90 border-2 border-indigo-500/40 max-w-2xl mx-auto p-5 rounded-xl mb-6 text-left hidden">
                     <div class="flex items-center space-x-2 text-indigo-400 font-bold text-sm mb-2 border-b border-slate-800 pb-2">
                         <i class="fa-solid fa-brain"></i>
@@ -204,7 +220,7 @@
                     <div class="text-4xl font-black text-amber-400 my-1.5" id="final-score">0 題</div>
                     <div class="text-xs text-slate-500" id="final-player">讀取中...</div>
                     <div class="mt-3 pt-3 border-t border-slate-800 text-xs text-emerald-400 flex items-center justify-center animate-pulse" id="sync-status">
-                        <i class="fa-solid fa-arrows-rotate animate-spin mr-1.5"></i> 正在同步至雲端試算表...
+                        <i class="fa-solid fa-arrows-rotate animate-spin mr-1.5"></i> 正在同步至雲端智慧石板...
                     </div>
                 </div>
 
@@ -220,6 +236,7 @@
                 </div>
             </div>
 
+            <!-- 4. 英雄榜畫面 -->
             <div id="tab-leaderboard" class="tab-content hidden wood-gradient rounded-2xl shadow-2xl border border-slate-800 p-6 md:p-8">
                 <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4 border-b border-slate-800 pb-5">
                     <div>
@@ -253,6 +270,7 @@
                 </div>
             </div>
 
+            <!-- 5. 管理者登入與控制台畫面 -->
             <div id="tab-admin" class="tab-content hidden wood-gradient rounded-2xl shadow-2xl border border-slate-800 p-6 md:p-8">
                 
                 <!-- 密碼登入區 -->
@@ -263,7 +281,7 @@
                     <h2 class="text-2xl font-bold text-white mb-2">管理者安全登入</h2>
                     <p class="text-xs text-slate-400 mb-6">請輸入管理密碼，以管理雲端題庫、修編生成歷代挑戰成績</p>
                     <form onsubmit="handleAdminLogin(event)" class="space-y-4">
-                        <input type="password" id="admin-password" placeholder="請輸入管理密碼" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none">
+                        <input type="password" id="admin-password" placeholder="請輸入管理密碼" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
                         <button type="submit" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-2.5 px-4 rounded-lg transition">
                             登入管理系統
                         </button>
@@ -329,7 +347,7 @@
                                     <h3 class="text-lg font-bold text-white flex items-center">
                                         <i class="fa-solid fa-book-open text-blue-400 mr-2"></i> 雲端題庫管理
                                     </h3>
-                                    <p class="text-xs text-slate-400 mt-1">在此處新增或編輯題目，將同步更新至 Google 試算表。若未設定則顯示本機基礎 <span id="total-questions-count">50</span> 題。</p>
+                                    <p class="text-xs text-slate-400 mt-1">在此處新增或編輯題目，將同步更新至 Google 試算表。目前載入題庫總數：<span id="total-questions-count-admin" class="font-bold text-blue-400">0</span> 題。</p>
                                 </div>
                                 <div class="flex gap-2">
                                     <button onclick="refreshQuestionsList()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-xs rounded-md transition flex items-center">
@@ -403,7 +421,7 @@
                                     </div>
                                 </div>
                                 <div class="pt-4 flex justify-end">
-                                    <button onclick="saveApiUrl()" class="bg-blue-600 hover:bg-blue-500 text-xs text-white font-bold py-2 px-5 rounded-lg transition shadow-md">儲存新 URL</button>
+                                    <button onclick="saveApiUrl()" class="bg-blue-600 hover:bg-blue-500 text-xs text-white font-bold py-2 px-5 rounded-lg transition">儲存新 URL</button>
                                 </div>
                             </div>
                         </div>
@@ -413,7 +431,6 @@
         </div>
     </main>
 
-    
     <!-- 成績編輯Modal -->
     <div id="score-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4">
@@ -552,7 +569,7 @@
 
     <script>
         // ==========================================
-        //  全域變數與系統狀態
+        //  全域變數宣告
         // ==========================================
         let questions = []; 
         let gameQueue = []; 
@@ -576,10 +593,18 @@
         let confirmResolver = null;
 
         // ==========================================
-        //  本地快取載入、姓名去識別化、提示對話框
+        //  核心系統與 UI 輔助函式 (宣告在最上方防止 hoisting ReferenceError)
         // ==========================================
         function loadLocalScores() {
             scoresHistory = JSON.parse(localStorage.getItem('xingjia_scores_history')) || [];
+        }
+
+        function updateTotalQuestionsDisplay() {
+            const adminCount = document.getElementById('total-questions-count-admin');
+            if (adminCount) adminCount.innerText = questions.length;
+            
+            const startCount = document.getElementById('start-total-count');
+            if (startCount) startCount.innerText = questions.length;
         }
 
         function maskName(name) {
@@ -616,29 +641,40 @@
             }
         }
 
+        // 去皮正規化比對：過濾掉 【...】 的系統標籤、空白及常見標點，只比對題目核心主幹文字
+        function getCoreQuestionText(text) {
+            if (!text) return "";
+            let normalized = text.trim();
+            while (normalized.startsWith('【') && normalized.includes('】')) {
+                const closeBracketIdx = normalized.indexOf('】');
+                normalized = normalized.substring(closeBracketIdx + 1).trim();
+            }
+            return normalized.replace(/[\s\.,\/#!$%\^&\*;:{}=\-_`~()?"'’「」【】、。，：；？！]/g, "");
+        }
+
         // ==========================================
-        //  內建 50 題高品質素養題庫生成與解析（備援用）
+        //  內建 50 題高品質素養題庫生成與解析（備援與填充用）
         // ==========================================
         function buildFullDataset() {
             const rawDataset = [
                 { id: 1, p: "大象每天花近16小時尋找食用植物，一隻成年象每天可吃下多達150公斤樹葉與草木。然而牠們消化系統效率不高，大約只有40%會被吸收，其餘都會原封不動排泄出來。", q: "根據文意，下列敘述何者正確？", a: "大象絕大多數時間都在睡眠", b: "大象的消化器官能吸收九成養分", c: "大象排泄物中含有大量未完全消化的植物殘渣", d: "成年象每天大約排泄出150公斤廢棄物", ans: "C", exp: "【邏輯推論】大象只吸收40%的食物，其餘（60%）都原封不動排泄，故含有大量未消化殘渣。" },
                 { id: 2, p: "臺灣櫻花鉤吻鮭是冰河時期留下的「孑遺生物」，只生活在高山冰涼、清澈、無污染的溪流中。水溫若超過攝氏15度，牠們便難以生存。近年因為氣候暖化與人為開發，棲地大幅縮小。", q: "臺灣櫻花鉤吻鮭生存面臨威脅，下列哪一個『不是』主要原因？", a: "高山水溫的上升", b: "溪流受到人為污染", c: "冰河時期的全球變冷現象", d: "周遭土地的過度開發", ans: "C", exp: "【因果辨析】冰河時期的冷水正是牠們能來到臺灣的原因。現代面臨威脅是因為氣候暖化變熱，非全球變冷。" },
                 { id: 3, p: "網路貼文寫著：「天天吃烤土司會致癌！因為烤焦的麵包中含有單氯二醇等劇毒致癌物質！」專家對此澄清：除非每天吃下幾十公斤烤焦的吐司，毒素才可能在體內累積到危害劑量。", q: "針對此貼文與專家的澄清，我們應抱持什麼樣的媒體識讀態度？", a: "立刻轉發，寧可信其有", b: "注意劑量才是關鍵，避免過度焦慮或輕信誇大標題", c: "既然會致癌，不論吃多少都應該絕對禁止", d: "網路謠言必定都是科學家編造的", ans: "B", exp: "【媒體識讀】許多驚悚貼文忽略了『劑量』。專家指出每天需吃下數十公斤才可能累積危害，因此注意劑量是關鍵。" },
-                { id: 4, p: "在自然界中，蜜蜂扮演「授粉者」的重要角色。人類食用的作物中，有高達三分之一需要依靠昆蟲授粉，而其中蜜蜂佔了絕大比例。如果蜜蜂滅絕，人類將面臨嚴重的糧食危機。", q: "文中強調「蜜蜂滅絕會引發糧食危機」的主要關鍵是什麼？", a: "人類缺少了主要的糖分來源（蜂蜜）", b: "許多農作物會因為失去授粉管道而無法結果繁衍", c: "其他食草昆蟲會因為沒有蜜蜂而大量繁殖", d: "大自然中將不再有花草植物生長", ans: "B", exp: "【整合與解釋】蜜蜂是植物授粉結果的重要推手。沒有蜜蜂，作物就無法順利果實繁衍，導致人類糧食缺乏。" },
+                { id: 4, p: "在自然界中，蜜蜂扮演「授粉者」的重要角色。人類食用的作物中，有高達三分之一需要依靠昆蟲授粉，而其中蜜蜂佔了絕大比例。如果蜜蜂滅絕，人類將面臨演重的糧食危機。", q: "文中強調「蜜蜂滅絕會引發糧食危機」的主要關鍵是什麼？", a: "人類缺少了主要的糖分來源（蜂蜜）", b: "許多農作物會因為失去授粉管道而無法結果繁衍", c: "其他食草昆蟲會因為沒有蜜蜂而大量繁殖", d: "大自然中將不再有花草植物生長", ans: "B", exp: "【整合與解釋】蜜蜂是植物授粉結果的重要推手。沒有蜜蜂，作物就無法順利果實繁衍，導致人類糧食缺乏。" },
                 { id: 5, p: "垃圾分類回收固然能減少資源消耗，但「減量（Reduce）」才是環保最核心的一環。如果我們不減少購買一次性產品，即使回收做得再好，處理回收垃圾本身產生的碳排放量依然會持續傷害地球。", q: "根據這段話，最根本的環保做法應該是？", a: "全面禁止任何形式的消費與購物", b: "從源頭減少購買不需要、且用完即丟的物品", c: "研發更無污染的垃圾焚化爐", d: "將所有垃圾轉為可回收資源", ans: "B", exp: "【環保思辨】核心在於「減量（Reduce）」，只有從源頭少買一次性、用完即丟的產品，才是減少碳排的最根本做法。" },
                 { id: 6, p: "主動式閱讀者在看書時，不僅被動接受故事情節，更會時常對作者的觀點提出「為什麼」的疑問，並嘗試在書中尋找證據來支持自己的推論。", q: "下列哪一種閱讀行為最符合「主動式閱讀」的定義？", a: "用最快的速度把一整本小說讀完，不作任何停留", b: "一邊讀一邊在腦海中思索：『這個角色的決定真的合理嗎？』", c: "只閱讀老師指派或考試會考的教科書與講義", d: "將書中優美的句子一字不漏地背誦下來", ans: "B", exp: "【定義對照】主動式閱讀的核心在於『思索質疑、尋求證據』，對情節、角色決定產生自我對話，符合B選項。" },
                 { id: 7, p: "水筆仔為了適應高鹽度、缺氧且鬆軟的泥質灘地，演化出了獨特的「胎生苗」現象。果實成熟後不立刻落地，而是在母樹上萌芽並吸收養分，直到發育成筆狀幼苗才脫離母體插入泥中。", q: "水筆仔之所以發展出「胎生苗」，最主要是為了解決什麼生存困境？", a: "灘地陽光照射不足的問題", b: "泥灘環境過於惡劣，種子直接落地難以發芽與扎根", c: "防止果實被高山下來的淡水魚類啃食", d: "為了逃避陸地草食性哺乳動物的威脅", ans: "B", exp: "【適應進化】軟泥灘高鹽缺氧。若果實直接掉入容易發霉壞死，在樹上先長成筆狀幼苗再插入，能極大化發芽機率。" },
                 { id: 8, p: "西元1840年，英國發行了世界上第一張郵票「黑便士」。在郵票發明前，郵資是由「收件人」支付，且費用高昂。黑便士的誕生改由「寄件人」預付，讓郵政服務變得普及與廉價，改變了人類通訊歷史。", q: "根據這段歷史，「黑便士」帶來最革命性的改變是什麼？", a: "讓郵資改由寄件人預付，大幅降低寄信門檻", b: "郵票的圖案變成了精緻的藝術收藏品", c: "收件人不再需要為了收信而繳納罰金", d: "英國成為世界上最會製造黑墨水的國家", ans: "A", exp: "【制度分析】改由寄信人付費且價格便宜。這一點打通了通訊管道，使得一般民眾也能普遍消費得起。" },
-                { id: 9, p: "許多人以為仙人掌的刺是為了防禦掠食者。事實上，這些刺是由「葉子」退化而成。細小的刺不但可以減少水分在烈日下的蒸散，還能捕捉流經其表面的露水，是荒漠植物適應極度乾旱的智慧。", q: "仙人掌的刺在生物學上的主要適應功能『不包括』下列何者？", a: "幫助植株在夜間進行旺盛的光合作用", b: "大幅降低葉片水分蒸散的面積", c: "在乾燥清晨收集並引導微量露水", d: "保護植物不被部分動物輕易啃食", ans: "A", exp: "【細節辨認】光合作用主要依靠仙人掌綠色多肉的『莖』，細小的刺演化退化，完全不具備光合作用的功能。" },
-                { id: 10, p: "有言道：「良言一句三冬暖，惡語傷人六月寒。」這句話提醒我們，語言具有強大的能量。有時候一句無心的刻薄批評，可能會對聆聽者的心理防線造成難以抹滅的陰影與傷害。", q: "這句話最適合用來勸誡大眾注意什麼事情？", a: "在寒冷的冬天要多對別人說溫暖的話", b: "說話時應慎選用詞，展現體貼與同理心", c: "不要在六月的炎夏對別人大吼大叫", d: "應多學習說話技巧，以便說服別人", ans: "B", exp: "【言外之意】俗諺以冬夏溫度來對比人際溝通的心理感受，主要在強調語言的力量，警惕大眾說話要溫柔得體。" }
+                { id: 9, p: "許多人以為仙人掌的刺是為了防禦掠食者。事實上，這些刺是由「葉子」退化而成。細小的刺不但可以減少水分在烈日下的蒸散，還能捕捉流經其表面的露水，是荒漠植物適應極度乾旱的智慧。", q: "仙人掌的刺在生物學上的主要適應功能『不包括』下列何者？", a: "幫助植株在夜間進行旺盛的光合作用", b: "大幅降低葉片水分蒸散的面積", c: "在乾燥清晨收集並引導微量露水", d: "保護植物不被部分動物輕易啃食", ans: "A", exp: "【細節排除】光合作用主要依靠仙人掌綠色多肉的『莖』，細小的刺演化退化，完全不具備光合作用的功能。" },
+                { id: 10, p: "有言道：「良言一句三冬暖，惡語傷人六月寒。」這句話提醒我們，語言具有強大的能量。有時候一句無心的刻刻薄批評，可能會對聆聽者的心理防線造成難以抹滅的陰影與傷害。", q: "這句話最適合用來勸誡大眾注意什麼事情？", a: "在寒冷的冬天要多對別人說溫暖的話", b: "說話時應慎選用詞，展現體貼與同理心", c: "不要在六月的炎夏對別人大吼大叫", d: "應多學習說話技巧，以便說服別人", ans: "B", exp: "【言外之意】俗諺以冬夏溫度來對比人際溝通的心理感受，主要在強調語言的力量，警惕大眾說話要溫柔得體。" }
             ];
 
             const extLibrary = [
-                { p: "科學思辨中，糖在高溫下溶解速度加快。但並非所有固體的溶解度都會隨著溫度升高而增加，例如氫氧化鈣在高溫下的溶解度反而下降。這在化學上被稱為放熱溶解反應。", q: "【科學思考】關於溶解度與溫度的關係，下列哪一個科學觀念最客觀且符合文意？", a: "所有固體在熱水裡的溶解量一定比冷水多", b: "不同的化學物質具有獨特的物理溶解特性，不能用單一經驗直接套用", c: "只要將水拼命加熱，就能無限量溶解所有的固體", d: "液體的溫度對固體溶解量完全沒有關係", ans: "B", exp: "【客觀推理】個別固體的高溫溶解現象不能推論全體。任何物質都有其物理極限與化學本質，需實驗佐證。" },
-                { p: "台灣的地名背後常含有歷史故事。例如「民雄」舊稱「打貓」，「打貓」是源自於平埔族洪雅族社名「Taneaw」的閩南語音譯，後來日治時期因其音與日語「民雄（Tamio）」相近而改名。", q: "【文化脈絡】「打貓」改名為「民雄」的主要關鍵因應了哪一項演變？", a: "日治時期官方對於台語發音進行了諧音日語化改譯", b: "當地原住民與漢人發生嚴重的貓咪產權糾紛", c: "清朝官員認為打貓聽起來太粗俗而下令更改", d: "當地居民舉行了全體公投投票改名", ans: "A", exp: "【語音演化】平埔族地名以台語音譯為打貓，後續政權（日方）再度以諧音 Tamio 的漢字『民雄』取代，見證地名軌跡。" },
-                { p: "情緒勒索是一種關係中的控制手段，通常由一方利用另一方的內疚感、恐懼感或責任感，來強迫對方順從自己的要求，這在親人、伴侶間最為常見。", q: "【社會情境】面對關係中的情緒勒索，下列哪一種因應之道最健康且符合心理學？", a: "為了維持和諧，無條件答應對方的所有要求", b: "建立明確的個人界線，冷靜溫和地拒絕不合理的要求", c: "立刻以更大的聲音對罵回去，打碎對方的自尊心", d: "假裝沒聽到，徹底斷絕與對方的所有聯絡", ans: "B", exp: "【人際界線】無條件答應只會促成無盡索求。建立自我的理智防線並溫和說『不』，是擺脫控制關係的關鍵。" },
-                { p: "「特洛伊木馬」典故出自希臘神話，希臘聯軍建造巨大木馬假意退兵，特洛伊人將其作為戰利品拉入城內，深夜木馬內的伏兵開城門裡應外合，攻陷特洛伊城。", q: "【神話與應用】現代防毒軟體常提到「木馬病毒（Trojan）」，這是借用了此神話的哪一項核心特徵？", a: "病毒長得很像一隻巨大的木頭駿馬", b: "偽裝成安全無害的檔案，引誘使用者下載後在內部發動破壞", c: "它只會破壞希臘或特洛伊當地的網路電腦", d: "這種病毒完全由木頭材質製成", ans: "B", exp: "【譬喻應用】木馬計謀是『外表無害，裡藏威脅』。資訊木馬假裝是實用下載程式，被點擊啟動後即在內部大搞破壞。" },
-                { p: "電子書雖然輕便、好攜帶，且能裝載上千本書籍，但傳統實體書特有的紙張質感與翻閱時的觸覺反饋，依然是許多愛書人無法取代的情懷。", q: "【核心思維】如果學校圖書館要推廣閱讀，下列哪一種採購策略最能兼顧這段話中提到的價值？", a: "將所有實體書銷毀，全面改買電子書平板", b: "同步購置實體書籍與電子書平台，提供學生多元的閱讀觸覺與便利選擇", c: "完全禁止購買電子書，只買厚重的精裝書", d: "採購大量益智玩具代替書籍", ans: "B", exp: "【全方位整合】兩者各有所長，無須偏廢任何一方。提供數位便利與紙本厚度，最能照顧不同學生的閱讀偏好。" }
+                { p: "科學思辨中，糖在高溫下溶解速度加快。但並非所有固體的溶解度都會隨著溫度升高而增加，例如氫氧化鈣在高溫下的溶解度反而下降。這在化學上被稱為放熱溶解反應。", q: "【科學思考】關於溶解度與溫度的關係，下列哪一個科學觀念最客觀且符合文意？", a: "所有固體在熱水裡的溶解量一定比冷水多", b: "不同的化學物質具有獨特的物理溶解特性，不能用單一經驗直接套用", c: "只要將水拼命加熱，就能無限量溶解所有的固體", d: "液體的溫度對固體溶解量完全沒有關係", ans: "B", exp: "【科學解析】糖的特性不能代表全體固體（如氫氧化鈣即是特例）。科學精神講求嚴謹，必須透過實驗檢驗各項特例，切忌以偏概全。" },
+                { p: "台灣的地名背後常含有歷史故事。例如「民雄」舊稱「打貓」，「打貓」是源自於平埔族洪雅族社名「Taneaw」的閩南語音譯，後來日治時期因其音與日語「民雄（Tamio）」相近而改名。", q: "【文化脈絡】「打貓」改名為「民雄」的主要關鍵因應了哪一項演變？", a: "日治時期官方對於台語發音進行了諧音日語化改譯", b: "當地原住民與漢人發生嚴重的貓咪產權糾紛", c: "清朝官員認為打貓聽起來太粗俗而下令更改", d: "當地居民舉行了全體公投投票改名", ans: "A", exp: "【文化解析】由平埔族語 Taneaw 轉台語『打貓』，再因日語發音 Tamio 與『民雄』相近而改名。地名的變更體現了不同政權在語言與行政管理上的歷史軌跡。" },
+                { p: "情緒勒索是一種關係中的控制手段，通常由一方利用另一方的內疚感、恐懼感 or 責任感，來強迫對方順從自己的要求，這在親人、伴侶間最為常見。", q: "【社會情境】面對關係中的情緒勒索，下列哪一種因應之道最健康且符合心理學？", a: "為了維持和諧，無條件答應對方的所有要求", b: "建立明確的個人界線，冷靜溫和地拒絕不合理的要求", c: "立刻以更大的聲音對罵回去，打碎對方的自尊心", d: "假裝沒聽到，徹底斷絕與對方的所有聯絡", ans: "B", exp: "【心理應用】面對勒索，無條件順從只會加深控制惡性循環。設立自我界線，並溫和堅定地對事不對人，才是阻斷情緒勒索、維護健康關係的正確方法。" },
+                { p: "「特洛伊木馬」典故出自希臘神話，希臘聯軍建造巨大木馬假意退兵，特洛伊人將其作為戰利品拉入城內，深夜木馬內的伏兵開城門裡應外合，攻陷特洛伊城。", q: "【神話與應用】現代防毒軟體常提到「木馬病毒（Trojan）」，這是借用了此神話的哪一項核心特徵？", a: "病毒長得很像一隻巨大的木頭駿馬", b: "偽裝成安全無害的檔案，引誘使用者下載後在內部發動破壞", c: "它只會破壞希臘或特洛伊當地的網路電腦", d: "這種病毒完全由木頭材質製成", ans: "B", exp: "【文意借代】木馬的核心計策在於『外表假裝成無害的禮物，實則包藏禍心』。電腦木馬程式也是偽裝成正常的軟體，待用戶執行後，在後台開啟後門破壞系統。" },
+                { p: "電子書雖然輕便、好攜帶，且能裝載上千本書籍，但傳統實體書特有的紙張質感與翻閱時的觸覺反饋，依然是許多愛書人無法取代的情懷。", q: "【核心思維】如果學校圖書館要推廣閱讀，下列哪一種採購策略最能兼顧這段話中提到的價值？", a: "將所有實體書銷毀，全面改買電子書平板", b: "同步購置實體書籍與電子書平台，提供學生多元的閱讀觸覺與便利選擇", c: "完全禁止購買電子書，只買厚重的精裝書", d: "採購大量益智玩具代替書籍", ans: "B", exp: "【應用解析】電子書有便利性，紙本書有觸覺情懷與翻閱溫度。兩者不是互相排斥，而是相輔相成。多元購置能提供孩子便利性，同時兼顧深度的紙本翻閱體驗。" }
             ];
 
             localBackupQuestions = [...rawDataset];
@@ -662,30 +698,48 @@
         }
 
         // ==========================================
+        //  雲端與本機題目融合邏輯 (解決 50+ 問題)
         // ==========================================
         function mergeCloudAndLocalQuestions(cloudQs) {
-            const merged = [...cloudQs];
+            const merged = [];
+            const seenCoreTexts = new Set();
+
+            // 1. 優先將所有線上雲端題目拉入，賦予最高顯示優先權
+            cloudQs.forEach(q => {
+                const formatted = {
+                    id: Number(q.id),
+                    passage: q.passage || '',
+                    question: q.question || '',
+                    optionA: q.optionA || '',
+                    optionB: q.optionB || '',
+                    optionC: q.optionC || '',
+                    optionD: q.optionD || '',
+                    answer: q.answer || 'A',
+                    exp: q.exp || '請回到文中尋找線索，理清各項因果關係。'
+                };
+                merged.push(formatted);
+                // 記錄雲端題目去皮後的特徵文字
+                seenCoreTexts.add(getCoreQuestionText(formatted.question));
+            });
+
+            // 2. 將本機 50 題逐一取出比對。若該題「沒有」被線上雲端題目覆蓋或修改，就作為備用與追加填充
             localBackupQuestions.forEach(localQ => {
-                const isDuplicate = merged.some(q => 
-                    (q.question || "").trim() === (localQ.question || "").trim()
-                );
-                if (!isDuplicate) {
+                const coreText = getCoreQuestionText(localQ.question);
+                if (!seenCoreTexts.has(coreText)) {
                     merged.push(localQ);
+                    seenCoreTexts.add(coreText);
                 }
             });
-            return merged.map((q, idx) => ({ ...q, id: idx + 1 }));
-        }
 
-        function updateTotalQuestionsDisplay() {
-            const adminCount = document.getElementById('total-questions-count');
-            if (adminCount) adminCount.innerText = questions.length;
-            
-            const startCount = document.getElementById('start-total-count');
-            if (startCount) startCount.innerText = questions.length;
+            // 3. 重新編排整合後試題的流水關卡 ID 排序
+            return merged.map((q, idx) => ({
+                ...q,
+                id: idx + 1
+            }));
         }
 
         // ==========================================
-        //  分頁切換主控
+        //  導覽列分頁切換
         // ==========================================
         function switchTab(tabName) {
             clearInterval(timerInterval);
@@ -742,6 +796,7 @@
         }
 
         // ==========================================
+        //  遊戲隨機化出題與滾動引擎
         // ==========================================
         function startGame(event) {
             event.preventDefault();
@@ -756,9 +811,8 @@
 
             playerInfo = { grade, className, name };
             document.getElementById('game-player-info').innerText = `${grade}${className} ${maskName(name)}`;
-            document.getElementById('game-total-count').innerText = questions.length;
-
-            // Fisher-Yates 隨機洗牌
+            
+            // 洗牌整個不重合的題目池
             gameQueue = [...questions];
             for (let i = gameQueue.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -774,14 +828,23 @@
 
         function renderQuestion() {
             if (currentQuestionIndex >= gameQueue.length) {
-                endGame(true, false);
-                return;
+                // 如果答完所有不重複的題目，將自動開啟無限無極限循環挑戰
+                for (let i = gameQueue.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    const temp = gameQueue[i];
+                    gameQueue[i] = gameQueue[j];
+                    gameQueue[j] = temp;
+                }
+                currentQuestionIndex = 0;
+                showCustomAlert("🎉 恭喜！你已完美答完目前所有關卡！為你開啟下一輪『無限智慧隨機考驗』！", "success");
             }
 
             const currentQuestion = gameQueue[currentQuestionIndex];
+            
             document.getElementById('question-index').innerText = currentQuestionIndex + 1;
+            document.getElementById('game-total-count-label').innerText = `(智慧滾動無上限挑戰模式 🚀)`;
             document.getElementById('game-score').innerText = `${currentQuestionIndex} 題`;
-            document.getElementById('game-progress').style.width = `${(currentQuestionIndex / gameQueue.length) * 100}%`;
+            document.getElementById('game-progress').style.width = `${Math.min(100, (currentQuestionIndex / gameQueue.length) * 100)}%`;
 
             const passageBox = document.getElementById('question-passage-box');
             if (currentQuestion.passage) {
@@ -813,7 +876,7 @@
 
             currentShuffledOptions.forEach((opt, idx) => {
                 const btn = document.createElement('button');
-                btn.className = "w-full text-left bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 rounded-xl p-4 transition flex items-center space-x-3 group animate-fadeIn";
+                btn.className = "w-full text-left bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 rounded-xl p-4 transition flex items-center space-x-3 group";
                 btn.onclick = () => selectOption(idx);
                 btn.innerHTML = `
                     <span class="flex-shrink-0 w-7 h-7 rounded bg-slate-700 group-hover:bg-emerald-600 group-hover:text-white flex items-center justify-center font-bold text-slate-300 text-sm">
@@ -865,6 +928,7 @@
         }
 
         // ==========================================
+        //  遊戲結算與成績發送
         // ==========================================
         function endGame(isAllCorrect, isTimeout) {
             clearInterval(timerInterval);
@@ -929,6 +993,7 @@
         }
 
         // ==========================================
+        //  排行榜數據獲取與渲染
         // ==========================================
         async function fetchLeaderboardData() {
             let all = [...scoresHistory];
@@ -947,7 +1012,7 @@
                 console.warn("使用本機備用數據渲染排行榜");
             }
 
-            // 合併同人最高紀錄，去重
+            // 同一人只保留個人最高歷史紀錄，排除 0 題
             const map = {};
             all.forEach(r => {
                 const scoreNum = parseInt(r.score) || 0;
@@ -991,6 +1056,7 @@
         }
 
         // ==========================================
+        //  管理者後端與安全控制
         // ==========================================
         function handleAdminLogin(event) {
             event.preventDefault();
@@ -1046,6 +1112,9 @@
             });
         }
 
+        // ==========================================
+        //  學生成績明細修編管理
+        // ==========================================
         function renderAdminScoresTable() {
             const tbody = document.getElementById('admin-scores-body');
             tbody.innerHTML = '';
@@ -1078,8 +1147,6 @@
             });
         }
 
-        // ==========================================
-        // ==========================================
         function openScoreModal(scoreIndex = null) {
             document.getElementById('modal-score-index').value = '';
             document.getElementById('modal-score-name').value = '';
@@ -1151,6 +1218,7 @@
         }
 
         // ==========================================
+        //  雲端題庫管理與同步 (支援第 9 欄)
         // ==========================================
         async function refreshQuestionsList() {
             if (!googleApiUrl || googleApiUrl.trim() === "") {
@@ -1168,6 +1236,7 @@
                 if (result.status === 'success') {
                     if (result.data && result.data.length > 0) {
                         cloudQuestionsData = result.data;
+                        // 雲端與本機智慧比對融合 (無限制疊加)
                         questions = mergeCloudAndLocalQuestions(cloudQuestionsData);
                         showCustomAlert("最新題庫與詳解已與雲端完美同步！", "success");
                     } else {
@@ -1289,7 +1358,7 @@
                 exp: document.getElementById('q-exp').value
             };
 
-            // 本地預更新，提供即時回饋
+            // 本地預先載入防止畫面遲滯
             const existingIdx = questions.findIndex(q => Number(q.id) === Number(qData.id));
             const formatted = {
                 id: Number(qData.id),
@@ -1385,7 +1454,7 @@
         }
 
         // ==========================================
-        //  系統初始啟動邏輯
+        //  系統初始載入點 (無上限整合)
         // ==========================================
         async function loadGameResources() {
             buildFullDataset();
@@ -1397,8 +1466,10 @@
                     const result = await response.json();
                     if (result.status === "success" && Array.isArray(result.data) && result.data.length > 0) {
                         cloudQuestionsData = result.data;
+                        // 融合不重合之題庫數據
                         questions = mergeCloudAndLocalQuestions(cloudQuestionsData);
-                        console.log("成功從雲端同步讀取題目數量:", questions.length);
+                        console.log("成功從雲端同步讀取題目數量:", cloudQuestionsData.length);
+                        console.log("去皮融合後系統總題目數量:", questions.length);
                     }
                 } catch (e) {
                     console.warn("未檢測到雲端資料或網址，已進入內建 50 題挑戰模式：", e);
