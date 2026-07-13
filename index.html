@@ -308,7 +308,7 @@
                             </div>
                             <div class="flex gap-2 self-stretch md:self-auto">
                                 <button onclick="openScoreModal()" class="flex-1 bg-amber-600 hover:bg-amber-500 text-xs text-white font-bold py-2 px-3.5 rounded-lg transition">
-                                    <i class="fa-solid fa-user-plus mr-1"></i> 手動新增
+                                    <i class="fa-solid fa-user-plus mr-1"></i> 手動新增成績
                                 </button>
                                 <button onclick="exportData('scores')" class="flex-1 bg-blue-600 hover:bg-blue-500 text-xs text-white font-bold py-2 px-3 rounded-lg transition flex items-center justify-center">
                                     <i class="fa-solid fa-file-excel mr-1"></i> 匯出 CSV
@@ -603,16 +603,16 @@
         // ==========================================
         function buildFullDataset() {
             const rawDataset = [
-                { id: 1, p: "大象每天花近16小時尋找食用植物，一隻成年象每天可吃下多達150公斤樹葉與草木。然而牠們消化系統效率不高，大約只有40%會被吸收，其餘都會原封不動排泄出來。", q: "根據文意，下列敘述何者正確？", a: "大象絕大多數時間都在睡眠", b: "大象的消化器官能吸收九成養分", c: "大象排泄物中含有大量未完全消化的植物殘渣", d: "成年象每天大約排泄出150公斤廢棄物", ans: "C", exp: "【邏輯推論】文章指出大象只吸收40%的食物，其餘（60%）都『原封不動地排泄出來』。這代表排泄物裡充滿了沒消化完的殘渣。選項D不對是因為吃進去150公斤，扣除吸收的40%，排出的不會是滿額的150公斤。" },
+                { id: 1, p: "大象每天花近16小時尋找食用植物，一隻成年象每天可吃下多達150公斤樹葉與草木。然而牠們消化系統效率不高，大約只有40%會被吸收，其餘都會原封不動排泄出來。", q: "根據文意，下列敘述何者正確？", a: "大象絕大多數時間都在睡眠", b: "大象的消化器官能吸收九成養分", c: "大象排泄物中含有大量未完全消化的植物殘渣", d: "成年象每天大約排泄出150公斤廢棄物", ans: "C", exp: "【邏輯推論】文章指出大象只吸收40%的食物，其餘（60%）都『原封不動地排泄出來』。這代表排泄物裡充滿了沒消化完的殘渣。選項D不對是因為吃進去150公斤，扣除吸收的40%，排出的不會是滿額 of 150公斤。" },
                 { id: 2, p: "臺灣櫻花鉤吻鮭是冰河時期留下的「孑遺生物」，只生活在高山冰涼、清澈、無污染的溪流中。水溫若超過攝氏15度，牠們便難以生存。近年因為氣候暖化與人為開發，棲地大幅縮小。", q: "臺灣櫻花鉤吻鮭生存面臨威脅，下列哪一個『不是』主要原因？", a: "高山水溫的上升", b: "溪流受到人為污染", c: "冰河時期的全球變冷現象", d: "周遭土地的過度開發", ans: "C", exp: "【因果辨析】冰河時期的冷水環境正是牠們當時能來到臺灣的原因。近年會面臨威脅，是由於『氣候暖化（溫度變熱）』和『人為開發』，所以全球變冷並不是牠們現在面臨威脅的原因。" },
                 { id: 3, p: "網路貼文寫著：「天天吃烤土司會致癌！因為烤焦的麵包中含有單氯二醇等劇毒致癌物質！」專家對此澄清：除非每天吃下幾十公斤烤焦的吐司，毒素才可能在體內累積到危害劑量。", q: "針對此貼文與專家的澄清，我們應抱持什麼樣的媒體識讀態度？", a: "立刻轉發，寧可信其有", b: "注意劑量才是關鍵，避免過度焦慮或輕信誇大標題", c: "既然會致癌，不論吃多少都應該絕對禁止", d: "網路謠言必定都是科學家編造的", ans: "B", exp: "【媒體識讀】許多科學與健康謠言常使用『只要吃了就會死/致癌』的誇大詞彙。專家指出要達到『幾十公斤』才會危害，這說明了『劑量』才是關鍵，這題在考驗你是否能不盲從驚悚的網路大字報標題。" },
                 { id: 4, p: "在自然界中，蜜蜂扮演「授粉者」的重要角色。人類食用的作物中，有高達三分之一需要依靠昆蟲授粉，而其中蜜蜂佔了絕大比例。如果蜜蜂滅絕，人類將面臨嚴重的糧食危機。", q: "文中強調「蜜蜂滅絕會引發糧食危機」的主要關鍵是什麼？", a: "人類缺少了主要的糖分來源（蜂蜜）", b: "許多農作物會因為失去授粉管道而無法結果繁衍", c: "其他食草昆蟲會因為沒有蜜蜂而大量繁殖", d: "大自然中將不再有花草植物生長", ans: "B", exp: "【整合與解釋】文章說明人類有三分之一的作物需要昆蟲授粉，且『蜜蜂佔了絕大比例』。如果蜜蜂沒了，這些植物就無法順利授粉結果，農作物產量崩潰，才會引發糧食危機，不只是少了蜂蜜而已喔！" },
                 { id: 5, p: "垃圾分類回收固然能減少資源消耗，但「減量（Reduce）」才是環保最核心的一環。如果我們不減少購買一次性產品，即使回收做得再好，處理回收垃圾本身產生的碳排放量依然會持續傷害地球。", q: "根據這段話，最根本的環保做法應該是？", a: "全面禁止任何形式的消費與購物", b: "從源頭減少購買不需要、且用完即丟的物品", c: "研發更無污染的垃圾焚化爐", d: "將所有垃圾轉為可回收資源", ans: "B", exp: "【核心概念抽取】作者強調『減量（Reduce）才是環保最核心的一環』，並指出如果不減少一次性產品，回收流程一樣會產生碳排。因此最根本的做法是源頭減量，少買不必要的拋棄式物品。" },
                 { id: 6, p: "主動式閱讀者在看書時，不僅被動接受故事情節，更會時常對作者的觀點提出「為什麼」的疑問，並嘗試在書中尋找證據來支持自己的推論。", q: "下列哪一種閱讀行為最符合「主動式閱讀」的定義？", a: "用最快的速度把一整本小說讀完，不作任何停留", b: "一邊讀一邊在腦海中思索：『這個角色的決定真的合理嗎？』", c: "只閱讀老師指派或考試會考的教科書與講義", d: "將書中優美的句子一字不漏地背誦下來", ans: "B", exp: "【定義比對】文中提到主動式閱讀的特徵是『對觀點提出為什麼的疑問』並『尋找證據』。在腦中思索角色決定是否合理，就是實踐質疑與思辨的具體表現。" },
                 { id: 7, p: "水筆仔為了適應高鹽度、缺氧且鬆軟的泥質灘地，演化出了獨特的「胎生苗」現象。果實成熟後不立刻落地，而是在母樹上萌芽並吸收養分，直到發育成筆狀幼苗才脫離母體插入泥中。", q: "水筆仔之所以發展出「胎生苗」，最主要是為了解決什麼生存困境？", a: "灘地陽光照射不足的問題", b: "泥灘環境過於惡劣，種子直接落地難以發芽與扎根", c: "防止果實被高山下來的淡水魚類啃食", d: "為了逃避陸地草食性哺乳動物的威脅", ans: "B", exp: "【環境適應推論】泥質灘地『高鹽、缺氧、鬆軟』，一般種子掉下去極難發芽存活。水筆仔在母樹上先長成發育完全的『筆狀幼苗』再掉下來，才能一舉插進泥中定居，這是適應鬆軟泥灘的生存策略。" },
-                { id: 8, p: "西元1840年，英國發行了世界上第一張郵票「黑便士」。在郵票發明前，郵資是由「收件人」支付，且費用高昂。黑便士的誕生改由「寄件人」預付，讓郵政服務變得普及與廉價，改變了人類通訊歷史。", q: "根據這段歷史，「黑便士」帶來最革命性的改變是什麼？", a: "讓郵資改由寄件人預付，大幅降低寄信門檻", b: "郵票的圖案變成了精緻的藝術收藏品", c: "收件人不再需要為了收信而繳納罰金", d: "英國成為世界上最會製造黑墨水的國家", ans: "A", exp: "【新舊制對比】過去是『收件人付費且昂貴』，黑便士改為『寄件人預付』，從而使郵政服務變得『普及與廉價』。這就是它對通訊歷史帶來的革命性改變。" },
+                { id: 8, p: "西元1840年，英國發行了世界上第一張郵票「黑便士」。在郵票發明前，郵政服務是由「收件人」支付，且費用高昂。黑便士的誕生改由「寄件人」預付，讓郵政服務變得普及與廉價，改變了人類通訊歷史。", q: "根據這段歷史，「黑便士」帶來最革命性的改變是什麼？", a: "讓郵資改由寄件人預付，大幅降低寄信門檻", b: "郵票的圖案變成了精緻的藝術收藏品", c: "收件人不再需要為了收信而繳納罰金", d: "英國成為世界上最會製造黑墨水的國家", ans: "A", exp: "【新舊制對比】過去是『收件人付費且昂貴』，黑便士改為『寄件人預付』，從而使郵政服務變得『普及與廉價』。這就是它對通訊歷史帶來的革命性改變。" },
                 { id: 9, p: "許多人以為仙人掌的刺是為了防禦掠食者。事實上，這些刺是由「葉子」退化而成。細小的刺不但可以減少水分在烈日下的蒸散，還能捕捉流經其表面的露水，是荒漠植物適應極度乾旱的智慧。", q: "仙人掌的刺在生物學上的主要適應功能『不包括』下列何者？", a: "幫助植株在夜間進行旺盛的光合作用", b: "大幅降低葉片水分蒸散的面積", c: "在乾燥清晨收集並引導微量露水", d: "保護植物不被部分動物輕易啃食", ans: "A", exp: "【細節排除】文章提到刺的功能有：減少水分蒸散（B）、捕捉露水（C）、且一般人以為防禦（D，代表它也有部分防禦效果）。但是刺並『沒有』光合作用的功能，光合作用通常是靠綠色肥大的莖來進行。" },
-                { id: 10, p: "有言道：「良言一句三冬暖，惡語傷人六月寒。」這句話提醒我們，語言具有強大的能量。有時候一句無心的刻薄批評，可能會對聆聽者的心理防線造成難以抹滅的陰影與傷害。", q: "這句話最適合用來勸誡大眾注意什麼事情？", a: "在寒冷的冬天要多對別人說溫暖的話", b: "說話時應慎選用詞，展現體貼與同理心", c: "不要在六月的炎夏對別人大吼大叫", d: "應多學習說話技巧，以便說服別人", ans: "B", exp: "【文意轉譯】這句俗諺的核心是要我們注意說話的影響力。惡毒的話即使在盛夏（六月）也會讓人心寒。因此它是在勸誡大家說話時要謹慎、體貼，具有同理心，而非字面上的季節或溫度問題。" }
+                { id: 10, p: "有言道：「良言一句三冬暖，惡語傷人六月寒。」這句話提醒我們，語言具有強大的能量。有時候一句無心的刻刻薄批評，可能會對聆聽者的心理防線造成難以抹滅的陰影與傷害。", q: "這句話最適合用來勸誡大眾注意什麼事情？", a: "在寒冷的冬天要多對別人說溫暖的話", b: "說話時應慎選用詞，展現體貼與同理心", c: "不要在六月的炎夏對別人大吼大叫", d: "應多學習說話技巧，以便說服別人", ans: "B", exp: "【文意轉譯】這句俗諺的核心是要我們注意說話的影響力。惡毒的話即使在盛夏（六月）也會讓人心寒。因此它是在勸誡大家說話時要謹慎、體貼，具有同理心，而非字面上的季節或溫度問題。" }
             ];
 
             const extLibrary = [
@@ -643,7 +643,7 @@
         }
 
         // ==========================================
-        //  導覽切換與系統啟動
+        //  導覽切換與初始題庫加載
         // ==========================================
         function switchTab(tabName) {
             clearInterval(timerInterval);
@@ -699,14 +699,6 @@
             if (tabName === 'questions') renderAdminQuestionsList();
         }
 
-        function showCustomAlert(message, type = 'info') {
-            const alertBox = document.getElementById('custom-alert');
-            document.getElementById('alert-msg').innerText = message;
-            document.getElementById('alert-icon').innerHTML = type === 'error' ? '<i class="fa-solid fa-circle-exclamation text-rose-500"></i>' : '<i class="fa-solid fa-circle-check text-emerald-500"></i>';
-            alertBox.classList.remove('hidden');
-        }
-        function closeAlert() { document.getElementById('custom-alert').classList.add('hidden'); }
-
         // ==========================================
         //  遊戲隨機化出題與倒數引擎
         // ==========================================
@@ -717,7 +709,7 @@
             const name = document.getElementById('user-name').value.trim();
 
             if (!grade || !className || !name) {
-                showCustomAlert("請完整選擇年級與填寫姓名！", "error");
+                showCustomAlert("請完整選擇年級、班級並填寫挑戰姓名！", "error");
                 return;
             }
 
@@ -727,7 +719,7 @@
             // 如果從雲端加載了不同數量的題目，這時會更新數字
             document.getElementById('game-total-count').innerText = questions.length;
 
-            // Fisher-Yates 題序亂數洗牌
+            // Fisher-Yates 隨機洗牌出題序
             gameQueue = [...questions];
             for (let i = gameQueue.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -753,20 +745,20 @@
             document.getElementById('game-progress').style.width = `${(currentQuestionIndex / gameQueue.length) * 100}%`;
 
             const passageBox = document.getElementById('question-passage-box');
-            if (currentQuestion.passage || currentQuestion.p) {
-                passageBox.innerText = currentQuestion.passage || currentQuestion.p;
+            if (currentQuestion.passage) {
+                passageBox.innerText = currentQuestion.passage;
                 passageBox.classList.remove('hidden');
             } else {
                 passageBox.classList.add('hidden');
             }
-            document.getElementById('question-text').innerText = currentQuestion.question || currentQuestion.q;
+            document.getElementById('question-text').innerText = currentQuestion.question;
 
             // 選項洗牌
             const originalOptions = [
-                { key: 'A', text: currentQuestion.optionA || currentQuestion.a },
-                { key: 'B', text: currentQuestion.optionB || currentQuestion.b },
-                { key: 'C', text: currentQuestion.optionC || currentQuestion.c },
-                { key: 'D', text: currentQuestion.optionD || currentQuestion.d }
+                { key: 'A', text: currentQuestion.optionA },
+                { key: 'B', text: currentQuestion.optionB },
+                { key: 'C', text: currentQuestion.optionC },
+                { key: 'D', text: currentQuestion.optionD }
             ];
 
             currentShuffledOptions = [...originalOptions];
@@ -825,7 +817,7 @@
             const chosen = currentShuffledOptions[shuffledIndex];
             const currentQuestion = gameQueue[currentQuestionIndex];
 
-            const correctAns = currentQuestion.answer || currentQuestion.ans;
+            const correctAns = currentQuestion.answer;
 
             if (chosen.key === correctAns) {
                 currentQuestionIndex++;
