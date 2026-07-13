@@ -129,7 +129,7 @@
                             <i class="fa-solid fa-door-open"></i>
                             <span>開啟石門．挑戰開始</span>
                         </span>
-                        <span class="text-[10px] text-emerald-200 font-normal mt-0.5">Start Escape Challenge (<span id="start-total-count">50</span> Questions Loaded)</span>
+                        <span class="text-[10px] text-emerald-200 font-normal mt-0.5">Start Escape Challenge (<span id="start-total-count">0</span> Questions Loaded)</span>
                     </button>
                 </form>
             </div>
@@ -173,7 +173,7 @@
                 <div class="space-y-6">
                     <div class="bg-slate-900/40 p-6 rounded-xl border border-slate-800">
                         <span class="bg-indigo-500/10 text-indigo-400 text-xs font-bold px-2.5 py-1 rounded-full border border-indigo-500/20 mb-3 inline-block">
-                            關卡 <span id="question-index">1</span> / <span id="game-total-count">50</span>
+                            關卡 <span id="question-index">1</span> / <span id="game-total-count">0</span>
                         </span>
                         <!-- 閱讀文章引文 -->
                         <div id="question-passage-box" class="mb-4 bg-slate-950/80 p-4 rounded-lg border border-slate-800/80 text-slate-300 text-sm leading-relaxed overflow-y-auto max-h-48 custom-scrollbar">
@@ -345,7 +345,7 @@
                                     <h3 class="text-lg font-bold text-white flex items-center">
                                         <i class="fa-solid fa-book-open text-blue-400 mr-2"></i> 雲端題庫管理
                                     </h3>
-                                    <p class="text-xs text-slate-400 mt-1">在此處新增或編輯題目，將同步更新至 Google 試算表。</p>
+                                    <p class="text-xs text-slate-400 mt-1">在此處新增或編輯題目，將同步更新至 Google 試算表。若未設定則顯示本機基礎 <span id="total-questions-count">50</span> 題。</p>
                                 </div>
                                 <div class="flex gap-2">
                                     <button onclick="refreshQuestionsList()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-xs rounded-md transition flex items-center">
@@ -561,6 +561,24 @@
 
     <script>
         // ==========================================
+        //  載入本地成績快取
+        // ==========================================
+        function loadLocalScores() {
+            scoresHistory = JSON.parse(localStorage.getItem('xingjia_scores_history')) || [];
+        }
+
+        // ==========================================
+        //  更新畫面上的總題數顯示
+        // ==========================================
+        function updateTotalQuestionsDisplay() {
+            const adminCount = document.getElementById('total-questions-count');
+            if (adminCount) adminCount.innerText = questions.length;
+            
+            const startCount = document.getElementById('start-total-count');
+            if (startCount) startCount.innerText = questions.length;
+        }
+
+        // ==========================================
         //  遊戲資料與狀態設定
         // ==========================================
         let questions = []; 
@@ -580,7 +598,9 @@
         let googleApiUrl = localStorage.getItem('xingjia_gas_url') || defaultApiUrl;
         let cloudQuestionsData = [];
 
-        // 核心 50 題內建高品質素養題庫生成與解析
+        // ==========================================
+        //  內建 50 題高品質素養題庫生成與解析（備援用）
+        // ==========================================
         function buildFullDataset() {
             const rawDataset = [
                 { id: 1, p: "大象每天花近16小時尋找食用植物，一隻成年象每天可吃下多達150公斤樹葉與草木。然而牠們消化系統效率不高，大約只有40%會被吸收，其餘都會原封不動排泄出來。", q: "根據文意，下列敘述何者正確？", a: "大象絕大多數時間都在睡眠", b: "大象的消化器官能吸收九成養分", c: "大象排泄物中含有大量未完全消化的植物殘渣", d: "成年象每天大約排泄出150公斤廢棄物", ans: "C", exp: "【邏輯推論】文章指出大象只吸收40%的食物，其餘（60%）都『原封不動地排泄出來』。這代表排泄物裡充滿了沒消化完的殘渣。選項D不對是因為吃進去150公斤，扣除吸收的40%，排出的不會是滿額的150公斤。" },
@@ -620,14 +640,10 @@
                 });
                 currentId++;
             }
-            
-            // 更新首頁上的總題數顯示
-            const startTotalCountEl = document.getElementById('start-total-count');
-            if (startTotalCountEl) startTotalCountEl.innerText = questions.length;
         }
 
         // ==========================================
-        //  導覽切換與初始題庫加載
+        //  導覽切換與系統啟動
         // ==========================================
         function switchTab(tabName) {
             clearInterval(timerInterval);
@@ -660,6 +676,7 @@
             document.getElementById('sub-leaderboard').classList.add('hidden');
             document.getElementById('sub-questions').classList.add('hidden');
             document.getElementById('sub-settings').classList.add('hidden');
+            document.getElementById('sub-gas').classList.add('hidden');
 
             document.querySelectorAll('.admin-tab-btn').forEach(btn => {
                 btn.classList.remove('bg-slate-800', 'text-white', 'border-emerald-500', 'shadow-[0_0_10px_rgba(16,185,129,0.3)]', 'border-2', 'border-blue-500', 'shadow-[0_0_10px_rgba(59,130,246,0.3)]', 'border-amber-500', 'shadow-[0_0_10px_rgba(245,158,11,0.3)]');
@@ -700,15 +717,17 @@
             const name = document.getElementById('user-name').value.trim();
 
             if (!grade || !className || !name) {
-                showCustomAlert("請完整選擇年級、班級並填寫挑戰姓名！", "error");
+                showCustomAlert("請完整選擇年級與填寫姓名！", "error");
                 return;
             }
 
             playerInfo = { grade, className, name };
             document.getElementById('game-player-info').innerText = `${grade}${className} ${maskName(name)}`;
+            
+            // 如果從雲端加載了不同數量的題目，這時會更新數字
             document.getElementById('game-total-count').innerText = questions.length;
 
-            // Fisher-Yates 隨機洗牌出題序
+            // Fisher-Yates 題序亂數洗牌
             gameQueue = [...questions];
             for (let i = gameQueue.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -832,7 +851,7 @@
 
             if (isAllCorrect) {
                 titleEl.innerText = "🎉 奇蹟通關！順利逃脫！";
-                msgEl.innerText = "你已成功通過 50 道防作弊隨機素養考驗，卓越的理解力令人驚嘆！";
+                msgEl.innerText = "你已成功通過所有防作弊隨機素養考驗，卓越的理解力令人驚嘆！";
                 explainCard.classList.add('hidden');
             } else {
                 titleEl.innerText = isTimeout ? "⏰ 挑戰超時！大門已閉" : "⚠️ 石門鎖定！挑戰結束";
@@ -857,7 +876,7 @@
         }
 
         // ==========================================
-        //  成績與資料庫維護
+        //  雲端與本機同步數據庫機制
         // ==========================================
         async function saveScore(grade, className, name, score) {
             const status = document.getElementById('sync-status');
@@ -923,22 +942,6 @@
                 `;
                 tbody.appendChild(tr);
             });
-        }
-
-        function maskName(n) { return n ? (n.length === 2 ? n[0]+"O" : n[0]+"O"+n.slice(2)) : ""; }
-
-        // 載入本地成績快取
-        function loadLocalScores() {
-            scoresHistory = JSON.parse(localStorage.getItem('xingjia_scores_history')) || [];
-        }
-
-        // 更新畫面上的總題數顯示
-        function updateTotalQuestionsDisplay() {
-            const adminCount = document.getElementById('total-questions-count');
-            if (adminCount) adminCount.innerText = questions.length;
-            
-            const startCount = document.getElementById('start-total-count');
-            if (startCount) startCount.innerText = questions.length;
         }
 
         // ==========================================
@@ -1109,9 +1112,8 @@
                 const result = await response.json();
 
                 if (result.status === 'success') {
-                    cloudQuestionsData = result.data;
-                    
-                    if (cloudQuestionsData.length > 0) {
+                    if (result.data && result.data.length > 0) {
+                        cloudQuestionsData = result.data;
                         questions = cloudQuestionsData.map(q => ({
                             id: Number(q.id),
                             passage: q.passage || '',
@@ -1123,17 +1125,24 @@
                             answer: q.answer || 'A',
                             exp: q.exp || '請回到文中尋找線索，理清各項因果關係。'
                         }));
+                        showCustomAlert("最新題庫與詳解已與雲端完美同步！", "success");
+                    } else {
+                        // 雲端連線成功但無資料，切回本機50題
+                        cloudQuestionsData = [];
+                        buildFullDataset();
+                        showCustomAlert("雲端資料庫目前無題目，已自動切換回本機 50 題備援模式。", "info");
                     }
                     renderQuestionsTable();
                     updateTotalQuestionsDisplay();
-                    showCustomAlert("最新題庫與詳解已與雲端完美同步！", "success");
                 } else {
                     throw new Error(result.message || "讀取失敗");
                 }
             } catch (error) {
-                console.warn("無法取得雲端數據，採用本機題庫暫存：", error);
+                console.warn("無法取得雲端數據，採用本機題庫備援：", error);
                 cloudQuestionsData = []; 
+                buildFullDataset();
                 renderQuestionsTable();
+                updateTotalQuestionsDisplay();
             }
         }
 
@@ -1237,6 +1246,7 @@
                 exp: document.getElementById('q-exp').value
             };
 
+            // 本機預更新，使畫面流暢
             const existingIdx = questions.findIndex(q => Number(q.id) === Number(qData.id));
             const formatted = {
                 id: Number(qData.id),
@@ -1260,7 +1270,6 @@
                 await fetch(googleApiUrl, {
                     method: 'POST',
                     mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(qData)
                 });
                 
@@ -1269,6 +1278,7 @@
                 
                 renderQuestionsTable();
                 updateTotalQuestionsDisplay();
+
                 setTimeout(() => { refreshQuestionsList(); }, 2000); 
 
             } catch (error) {
@@ -1332,11 +1342,9 @@
         //  系統初始載入點 (自動連接雲端同步)
         // ==========================================
         async function loadGameResources() {
-            // 1. 初始化本地內置 50 題作為基本備存
             buildFullDataset();
             loadLocalScores();
             
-            // 2. 如果設定了 API 網址，嘗試非同步載入雲端題庫覆蓋
             if (googleApiUrl && googleApiUrl.trim() !== "") {
                 try {
                     const response = await fetch(`${googleApiUrl}?action=getQuestions`);
@@ -1354,16 +1362,13 @@
                             answer: q.answer || 'A',
                             exp: q.exp || '請回到文中尋找線索，理清各項因果關係。'
                         }));
+                        console.log("成功從雲端同步讀取題目數量:", questions.length);
                     }
                 } catch (e) {
                     console.warn("未檢測到雲端資料或網址，已進入內建 50 題挑戰模式：", e);
                 }
             }
             updateTotalQuestionsDisplay();
-            
-            // 啟動時更新首頁題數
-            const startTotalCountEl = document.getElementById('start-total-count');
-            if (startTotalCountEl) startTotalCountEl.innerText = questions.length;
         }
 
         window.onload = function() {
